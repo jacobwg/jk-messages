@@ -1,0 +1,15 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  sender: MyString
+  time: 2012-10-10 14:57:09
+  body: MyText
+  local_id: 1
+  facebook_id: MyString
+
+two:
+  sender: MyString
+  time: 2012-10-10 14:57:09
+  body: MyText
+  local_id: 1
+  facebook_id: MyString
