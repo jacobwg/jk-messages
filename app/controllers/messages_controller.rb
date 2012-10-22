@@ -8,6 +8,7 @@ class MessagesController < ApplicationController
       @messages = Message.where('time > ?', Time.parse(params[:since])).order('time DESC').page(params[:page]).reverse
     else
       @messages = Message.order('time DESC').page(params[:page]).reverse
+      @latest = @messages.last
     end
 
     respond_to do |format|

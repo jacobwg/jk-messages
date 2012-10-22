@@ -2,6 +2,6 @@
 
 <% if @messages.size > 0 %>
 <script type="text/javascript">
-  window.since = new Date(Date.parse('<%= @messages.last.time_cst.iso8601 %>'));
+  window.since = '<%= @latest.time_cst.iso8601 %>';
 </script>
 <% end %>
