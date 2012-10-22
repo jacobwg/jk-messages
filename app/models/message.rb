@@ -1,9 +1,17 @@
 class Message < ActiveRecord::Base
   attr_accessible :body, :facebook_id, :local_id, :sender, :time
 
+  def time_cst
+    time.in_time_zone('America/Chicago')
+  end
+
+  def date_formatted
+    time_cst.strftime('%B %e, %Y, %l:%M %P')
+  end
+
   def self.import
     thread_id = '510521608973600'
-    access_token = 'AAACEdEose0cBAPouYu4Gt7PMAozKzKts46mYdB1P5eixcr0T0kmW0UZBGPk7k7tMrrZBpFR4ZCy3IA7saPx7PmQosAnVZAGd9WDDU8k6xd89uQZC1NxZAG'
+    access_token = User.where(uid: '100000505263000').first.token
 
     g = Koala::Facebook::API.new(access_token)
 
@@ -16,7 +24,8 @@ class Message < ActiveRecord::Base
       message = g.get_object("#{thread_id}_#{i}")
       puts message
       next if message['message'].nil?
-      message = Message.new(:facebook_id => message['id'], :local_id => i, :sender => message['from']['name'], :body => message['message'], :time => DateTime.parse(message['created_time']))
+      time = DateTime.parse(message['created_time']).in_time_zone('America/Chicago')
+      message = Message.new(:facebook_id => message['id'], :local_id => i, :sender => message['from']['name'], :body => message['message'], :time => time)
       message.save
     end
   end

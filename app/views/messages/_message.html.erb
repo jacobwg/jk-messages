@@ -1,0 +1,16 @@
+<div class="row message">
+  <div class="one column">
+    <% if message.sender == 'Jacob Gillespie' %>
+    <img src="<%= asset_path('jacob.jpg') %>" alt="Jacob Gillespie">
+    <% else %>
+    <img src="<%= asset_path('kathryn.jpg') %>" alt="Jacob Gillespie">
+    <% end %>
+  </div>
+  <div class="nine columns">
+    <%= simple_format message.body %>
+    <hr>
+  </div>
+  <div class="two columns">
+    <abbr class="timeago" title="<%= message.time_cst %>"><%= message.date_formatted %></abbr>
+  </div>
+</div>

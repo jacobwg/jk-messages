@@ -2,10 +2,17 @@ class MessagesController < ApplicationController
   # GET /messages
   # GET /messages.json
   def index
-    @messages = Message.all
+
+    if params[:since]
+      @since = true
+      @messages = Message.where('time > ?', Time.parse(params[:since])).order('time DESC').page(params[:page]).reverse
+    else
+      @messages = Message.order('time DESC').page(params[:page]).reverse
+    end
 
     respond_to do |format|
       format.html # index.html.erb
+      format.js
       format.json { render json: @messages }
     end
   end

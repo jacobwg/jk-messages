@@ -1,0 +1,13 @@
+<% if @since %>
+  <% if @messages.size > 0 %>
+  $("#content").append("<%= escape_javascript(render(@messages)) %>");
+  var newSince = new Date(Date.parse('<%= @messages.last.time_cst.iso8601 %>'));
+  if (newSince > window.since) window.since = newSince;
+  <% end %>
+<% else %>
+  <% if @messages.size > 0 %>
+  $("#content").prepend("<%= escape_javascript(render(@messages)) %>");
+  <% else  %>
+  window.done = true;
+  <% end %>
+<% end %>

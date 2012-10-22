@@ -31,7 +31,8 @@ GEM
     arel (3.0.2)
     attr_required (0.0.5)
     bcrypt-ruby (3.0.1)
-    builder (3.0.3)
+    builder (3.0.4)
+    chunky_png (1.2.6)
     coffee-rails (3.2.2)
       coffee-script (>= 2.2.0)
       railties (~> 3.2.0)
@@ -39,25 +40,34 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.3.3)
+    compass (0.12.2)
+      chunky_png (~> 1.2)
+      fssm (>= 0.2.7)
+      sass (~> 3.1)
+    compass-rails (1.0.3)
+      compass (>= 0.12.2, < 0.14)
+    daemons (1.1.9)
     devise (2.1.2)
       bcrypt-ruby (~> 3.0)
       orm_adapter (~> 0.1)
       railties (~> 3.1)
       warden (~> 1.2.1)
     erubis (2.7.0)
+    eventmachine (1.0.0)
     execjs (1.4.0)
       multi_json (~> 1.0)
     faraday (0.8.4)
       multipart-post (~> 1.1)
-    fb_graph (2.5.2)
+    fb_graph (2.5.5)
       httpclient (>= 2.2.0.2)
       json
       rack-oauth2 (>= 0.14.4)
       tzinfo
+    fssm (0.2.9)
     hashie (1.2.0)
     hike (1.2.1)
     httpauth (0.2.0)
-    httpclient (2.2.7)
+    httpclient (2.3.0.1)
     i18n (0.6.1)
     journey (1.0.4)
     jquery-rails (2.1.3)
@@ -66,6 +76,9 @@ GEM
     json (1.7.5)
     jwt (0.1.5)
       multi_json (>= 1.0)
+    kaminari (0.14.1)
+      actionpack (>= 3.0.0)
+      activesupport (>= 3.0.0)
     koala (1.5.0)
       faraday (~> 0.7)
       multi_json (~> 1.3)
@@ -75,6 +88,9 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     mime-types (1.19)
+    modular-scale (1.0.2)
+      compass (>= 0.11.5)
+      sassy-math (>= 1.2)
     multi_json (1.3.6)
     multipart-post (1.1.5)
     oauth2 (0.8.0)
@@ -96,7 +112,7 @@ GEM
     rack (1.4.1)
     rack-cache (1.2)
       rack (>= 0.4)
-    rack-oauth2 (0.14.9)
+    rack-oauth2 (1.0.0)
       activesupport (>= 2.3)
       attr_required (>= 0.0.5)
       httpclient (>= 2.2.0.2)
@@ -130,6 +146,9 @@ GEM
       railties (~> 3.2.0)
       sass (>= 3.1.10)
       tilt (~> 1.3)
+    sassy-math (1.2)
+      compass (~> 0.11)
+    settingslogic (2.0.8)
     sprockets (2.1.3)
       hike (~> 1.2)
       rack (~> 1.0)
@@ -137,6 +156,10 @@ GEM
     sqlite3 (1.3.6)
     therubyracer (0.10.2)
       libv8 (~> 3.3.10)
+    thin (1.5.0)
+      daemons (>= 1.0.9)
+      eventmachine (>= 0.12.6)
+      rack (>= 1.0.0)
     thor (0.16.0)
     tilt (1.3.3)
     treetop (1.4.11)
@@ -148,21 +171,31 @@ GEM
       multi_json (~> 1.0, >= 1.0.2)
     warden (1.2.1)
       rack (>= 1.0)
+    zurb-foundation (3.1.1)
+      compass (>= 0.12.2)
+      modular-scale (>= 1.0.2)
+      rake
+      sass (>= 3.2.0)
 
 PLATFORMS
   ruby
 
 DEPENDENCIES
   coffee-rails (~> 3.2.1)
+  compass-rails
   devise
   fb_graph
   jquery-rails
+  kaminari
   koala
   oauth2
   omniauth
   omniauth-facebook
   rails (= 3.2.8)
   sass-rails (~> 3.2.3)
+  settingslogic
   sqlite3
   therubyracer
+  thin
   uglifier (>= 1.0.3)
+  zurb-foundation
