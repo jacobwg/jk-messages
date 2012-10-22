@@ -19,6 +19,8 @@
 
 # Learn more: http://github.com/javan/whenever
 
+env :PATH, '/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin'
+
 every 5.minutes do
   runner 'Message.import'
 end
