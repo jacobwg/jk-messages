@@ -10,7 +10,7 @@ server 'quorra.jacobwg.com', :app, :web, :db, :primary => true
 
 set :deploy_to, '/data/apps/kathryn'
 
-set :shared_children, shared_children + %w{config/application.yml}
+set :shared_children, shared_children + %w{config/application.yml config/database.yml}
 
 set :user, 'web'
 set :use_sudo, false

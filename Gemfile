@@ -4,7 +4,7 @@ source 'https://rubygems.org'
 gem 'rails', '3.2.8'
 
 # Database
-gem 'sqlite3'
+gem 'mysql2'
 
 # Server
 gem 'thin'
