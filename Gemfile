@@ -35,3 +35,8 @@ gem 'omniauth-facebook'
 gem 'settingslogic'
 
 gem 'kaminari'
+
+group :development do
+  gem 'whenever'
+  gem 'mina'
+end
