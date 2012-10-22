@@ -1,77 +1,38 @@
-require 'mina/bundler'
-require 'mina/rails'
-require 'mina/git'
-# require 'mina/rbenv'  # for rbenv support. (http://rbenv.org)
-# require 'mina/rvm'    # for rvm support. (http://rvm.io)
+require 'bundler/capistrano'
 
-# Basic settings:
-#   domain       - The hostname to SSH to.
-#   deploy_to    - Path to deploy into.
-#   repository   - Git repo to clone from. (needed by mina/git)
-#   branch       - Branch name to deploy. (needed by mina/git)
+set :application, "kathryn"
+set :repository,  "git@github.com:jacobwg/chat.git"
 
-set :domain, 'quorra.jacobwg.com'
-set :deploy_to, '/data/apps/kathryn'
-set :repository, 'git://github.com/jacobwg/chat.git'
+set :scm, :git
 set :branch, 'master'
 
-# Manually create these paths in shared/ (eg: shared/config/database.yml) in your server.
-# They will be linked in the 'deploy:link_shared_paths' step.
-set :shared_paths, ['config/application.yml', 'log']
+server 'quorra.jacobwg.com', :app, :web, :db, :primary => true
 
-# Optional settings:
-set :user, 'web'    # Username in the server to SSH to.
-#   set :port, '30000'     # SSH port number.
+set :deploy_to, '/data/apps/kathryn'
 
-# This task is the environment that is loaded for most commands, such as
-# `mina deploy` or `mina rake`.
-task :environment do
-  # If you're using rbenv, use this to load the rbenv environment.
-  # Be sure to commit your .rbenv-version to your repository.
-  # invoke :'rbenv:load'
+set :shared_children, shared_children + %w{config/application.yml}
 
-  # For those using RVM, use this to load an RVM version@gemset.
-  # invoke :'rvm:use[ruby-1.9.3-p125@default]'
-end
+set :user, 'web'
+set :use_sudo, false
 
-# Put any custom mkdir's in here for when `mina setup` is ran.
-# For Rails apps, we'll make some of the shared paths that are shared between
-# all releases.
-task :setup => :environment do
-  queue! %[mkdir -p "#{deploy_to}/shared/log"]
-  queue! %[chmod g+rx,u+rwx "#{deploy_to}/shared/log"]
+ssh_options[:forward_agent] = true
+default_run_options[:pty] = true
 
-  queue! %[mkdir -p "#{deploy_to}/shared/config"]
-  queue! %[chmod g+rx,u+rwx "#{deploy_to}/shared/config"]
 
-  queue! %[touch "#{deploy_to}/shared/config/database.yml"]
-  queue  %[-----> Be sure to edit 'shared/config/database.yml'.]
-end
+set :deploy_via, :remote_cache
 
-desc "Deploys the current version to the server."
-task :deploy => :environment do
-  deploy do
-    # Put things that will set up an empty directory into a fully set-up
-    # instance of your project.
-    invoke :'git:clone'
-    invoke :'deploy:link_shared_paths'
-    invoke :'bundle:install'
-    invoke :'rails:db_migrate'
-    invoke :'rails:assets_precompile'
+# if you want to clean up old releases on each deploy uncomment this:
+# after "deploy:restart", "deploy:cleanup"
 
-    queue "ln -sfv #{deploy_to}/shared/config/database.yml config/database.yml"
+# if you're still using the script/reaper helper you will need
+# these http://github.com/rails/irs_process_scripts
 
-    to :launch do
-      queue 'touch tmp/restart.txt'
-      queue 'whenever -w kathryn'
-    end
+# If you are using Passenger mod_rails uncomment this:
+namespace :deploy do
+  task :start do ; end
+  task :stop do ; end
+  task :restart, :roles => :app, :except => { :no_release => true } do
+    run "#{try_sudo} touch #{File.join(current_path,'tmp','restart.txt')}"
+    run 'whenever -w kathryn'
   end
 end
-
-# For help in making your deploy script, see the Mina documentation:
-#
-#  - http://nadarei.co/mina
-#  - http://nadarei.co/mina/tasks
-#  - http://nadarei.co/mina/settings
-#  - http://nadarei.co/mina/helpers
-

@@ -38,5 +38,5 @@ gem 'kaminari'
 
 group :development do
   gem 'whenever'
-  gem 'mina'
+  gem 'capistrano'
 end
