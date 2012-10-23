@@ -7,7 +7,7 @@
     <% end %>
   </div>
   <div class="nine columns">
-    <%= simple_format message.body %>
+    <%= auto_link(simple_format(message.body), :sanitize => false) %>
     <hr>
   </div>
   <div class="two columns">

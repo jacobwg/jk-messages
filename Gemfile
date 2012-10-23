@@ -36,6 +36,8 @@ gem 'settingslogic'
 
 gem 'kaminari'
 
+gem 'rinku', require: 'rails_rinku'
+
 group :development do
   gem 'whenever'
   gem 'capistrano'
