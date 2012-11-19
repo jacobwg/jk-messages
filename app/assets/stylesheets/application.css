@@ -24,8 +24,6 @@
 
 .message img {
   border: 3px solid #000;
-  -webkit-border-radius: 3px;
-  border-radius: 3px;
 }
 
 .message.Kathryn {
