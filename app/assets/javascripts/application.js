@@ -21,60 +21,59 @@ var el, prevHeight;
 
 window.done = false;
 
-var pollMessages = function() {
-  $.ajax({
-    url: '/messages?since=' + window.since.toString(),
-    type: 'get',
-    dataType: 'script',
-    success: function() {
-      $("abbr.timeago").timeago();
-    }
-  });
-}
-
 
 jQuery(function($) {
+
+  var pollMessages = function() {
+    $.ajax({
+      url: '/messages?since=' + window.since.toString(),
+      type: 'get',
+      dataType: 'script',
+      success: function() {
+        $("abbr.timeago").timeago();
+      }
+    });
+  };
+
+  var scrollToBottom = function() {
+    //$('body').scrollTop($('body').prop('scrollHeight'));
+    window.scrollTo(0, document.body.scrollHeight);
+  };
+
+  var startScrollWatch = function() {
+    $(document).on('scroll', function() {
+      if (loading || window.done) return;
+
+      var scroll = $(document).scrollTop();
+
+      if (scroll < 200) {
+        var firstMessage = $('.message:first');
+        var curOffset = firstMessage.offset().top - $(document).scrollTop();
+
+        $('.ajax').show();
+
+        loading = true;
+        page++;
+
+        $.ajax({
+          url: '/messages?page=' + page,
+          type: 'get',
+          dataType: 'script',
+          success: function() {
+            loading = false;
+            $('.ajax').hide();
+            $("abbr.timeago").timeago();
+            $(document).scrollTop(firstMessage.offset().top - curOffset);
+          }
+        });
+      }
+    });
+  };
+
+  setInterval(pollMessages, 10000);
+  setTimeout(scrollToBottom, 10);
+  setTimeout(startScrollWatch, 1000);
+
   $("abbr.timeago").timeago();
-  $('body').scrollTop($('body').prop('scrollHeight'));
-
-  setInterval(pollMessages, 2000);
-
   $('.ajax').hide();
-
-  /*$(".ajax").ajaxStart(function(){
-    $(this).show();
-  });
-
-  $(".ajax").ajaxStop(function(){
-    $(this).hide();
-  });*/
-
-
-  $(document).on('scroll', function() {
-    if (loading || window.done) return;
-
-    var scroll = $(document).scrollTop();
-
-    if (scroll < 200) {
-      var firstMessage = $('.message:first');
-      var curOffset = firstMessage.offset().top - $(document).scrollTop();
-
-      $('.ajax').show();
-
-      loading = true;
-      page++;
-
-      $.ajax({
-        url: '/messages?page=' + page,
-        type: 'get',
-        dataType: 'script',
-        success: function() {
-          loading = false;
-          $('.ajax').hide();
-          $("abbr.timeago").timeago();
-          $(document).scrollTop(firstMessage.offset().top - curOffset);
-        }
-      });
-    }
-  });
 });
