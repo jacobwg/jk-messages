@@ -66,7 +66,8 @@ jQuery(function($) {
   });
 
   setInterval(pollMessages, 10000);
-  setTimeout(scrollToBottom, 10);
+  scrollToBottom();
+  setTimeout(scrollToBottom, 1000);
 
   $("abbr.timeago").timeago();
   $('.ajax').hide();
