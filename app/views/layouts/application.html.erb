@@ -7,9 +7,6 @@
 <head>
 	<meta charset="utf-8" />
 
-	<!-- Uncomment to make IE8 render like IE7 -->
-	<!-- <meta http-equiv="X-UA-Compatible" content="IE=7" /> -->
-
 	<!-- Set the viewport width to device width for mobile -->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -22,6 +19,11 @@
 	<%= javascript_include_tag "application" %>
 
   <%= csrf_meta_tags %>
+
+  <!-- IE Fix for HTML5 Tags -->
+  <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
 
   <script type="text/javascript">
     var _gaq = _gaq || [];
@@ -40,7 +42,7 @@
   <div class="container fixed">
     <nav class="top-bar">
       <ul>
-        <li class="name"><h1><a href="/">Jacob and Kathryn</a></h1></li>
+        <li class="name"><h1><a href="/">Jacob and Kathryn's Facebook Messages</a></h1></li>
       </ul>
       <section>
         <ul class="left">
