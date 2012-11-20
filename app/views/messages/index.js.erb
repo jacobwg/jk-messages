@@ -6,6 +6,10 @@
 <% else %>
   <% if @messages.size > 0 %>
   $("#content").prepend("<%= escape_javascript(render(@messages)) %>");
+  var scroll = $(document).scrollTop();
+  var firstMessage = $('.message:first');
+  var curOffset = firstMessage.offset().top - $(document).scrollTop();
+  $(document).scrollTop(firstMessage.offset().top - curOffset);
   <% else  %>
   window.done = true;
   <% end %>

@@ -1,4 +1,12 @@
-<%= render(@messages) %>
+<div class="row" id="more-container">
+  <div class="twelve columns">
+    <a class="large button" id="load-more">Load More Messages</a>
+  </div>
+</div>
+
+<div id="content">
+  <%= render(@messages) %>
+</div>
 
 <% if @messages.size > 0 %>
 <script type="text/javascript">

@@ -13,7 +13,7 @@
 	<!-- Set the viewport width to device width for mobile -->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-	<title><%= content_for?(:title) ? "#{yield(:title)} - " : "" %>Jacob and Kathryn's Facebook Messages</title>
+	<title>Jacob and Kathryn's Facebook Messages</title>
 
 	<!-- Included CSS Files -->
 	<%= stylesheet_link_tag    "application" %>
@@ -40,7 +40,7 @@
   <div class="container fixed">
     <nav class="top-bar">
       <ul>
-        <li class="name"><h1><a href="/">Jacob and Kathryn's Facebook Messages</a></h1></li>
+        <li class="name"><h1><a href="/">Jacob and Kathryn</a></h1></li>
       </ul>
       <section>
         <ul class="left">
@@ -58,7 +58,7 @@
     </nav>
   </div>
 
-  <div class="container" id="content">
+  <div class="container">
     <%= yield %>
   </div>
 </body>

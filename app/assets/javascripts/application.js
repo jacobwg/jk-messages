@@ -40,39 +40,33 @@ jQuery(function($) {
     window.scrollTo(0, document.body.scrollHeight);
   };
 
-  var startScrollWatch = function() {
-    $(document).on('scroll', function() {
-      if (loading || window.done) return;
+  $('#load-more').on('click', function() {
+    if (loading || window.done) return;
 
-      var scroll = $(document).scrollTop();
+    var scroll = $(document).scrollTop();
+    var firstMessage = $('.message:first');
+    var curOffset = firstMessage.offset().top - $(document).scrollTop();
 
-      if (scroll < 200) {
-        var firstMessage = $('.message:first');
-        var curOffset = firstMessage.offset().top - $(document).scrollTop();
+    $('.ajax').show();
 
-        $('.ajax').show();
+    loading = true;
+    page++;
 
-        loading = true;
-        page++;
-
-        $.ajax({
-          url: '/messages?page=' + page,
-          type: 'get',
-          dataType: 'script',
-          success: function() {
-            loading = false;
-            $('.ajax').hide();
-            $("abbr.timeago").timeago();
-            $(document).scrollTop(firstMessage.offset().top - curOffset);
-          }
-        });
+    $.ajax({
+      url: '/messages?page=' + page,
+      type: 'get',
+      dataType: 'script',
+      success: function() {
+        loading = false;
+        $('.ajax').hide();
+        $("abbr.timeago").timeago();
+        $(document).scrollTop(firstMessage.offset().top - curOffset);
       }
     });
-  };
+  });
 
   setInterval(pollMessages, 10000);
   setTimeout(scrollToBottom, 10);
-  setTimeout(startScrollWatch, 1000);
 
   $("abbr.timeago").timeago();
   $('.ajax').hide();
