@@ -1,0 +1,46 @@
+<% if @search.hits.size == 0 %>
+<div class="row center" id="more-container">
+  <div class="span12">
+    <h1>No Results Found</h1>
+  </div>
+</div>
+
+<% else %>
+
+<div class="row center" id="more-container">
+  <div class="span12">
+    <h1>Results <%= (@search.hits.current_page - 1) * @search.hits.per_page + 1 %> - <%= [@search.hits.current_page * @search.hits.per_page, @search.total].min %> of <%= @search.total %></h1>
+
+    <%= paginate @search.hits %>
+  </div>
+</div>
+
+<div id="content">
+  <% @search.each_hit_with_result do |hit, message| %>
+    <div class="row message <%= message.sender %>">
+      <div class="span12">
+        <div class="media">
+          <% if message.sender == 'Jacob Gillespie' %>
+          <img src="<%= asset_path('jacob.jpg') %>" alt="Jacob Gillespie" class="media-object pull-left">
+          <% else %>
+          <img src="<%= asset_path('kathryn.jpg') %>" alt="Kathryn Elizabeth" class="media-object pull-left">
+          <% end %>
+          <div class="media-body">
+            <h4 class="media-heading"><abbr class="timeago" title="<%= message.time_cst %>"><%= message.date_formatted %></abbr></h4>
+            <%= auto_link(simple_format((message.body)), :sanitize => false) %>
+
+            <small class="muted"><a href="/near?id=<%= message.local_id %>"><i class="icon-calendar"></i> View Surrounding Messages</a></small>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<div class="row center">
+  <div class="span12">
+    <%= paginate @search.hits %>
+  </div>
+</div>
+
+<% end %>

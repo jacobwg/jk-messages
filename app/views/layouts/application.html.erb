@@ -60,8 +60,8 @@
 
         <div class="nav-collapse collapse">
 
-          <form class="navbar-search pull-left">
-            <input type="text" class="search-query" placeholder="Search">
+          <form class="navbar-search pull-left" action="/search" method="get">
+            <input type="text" class="search-query" placeholder="Search" name="q"<% if @query %>value="<%= @query %>"<% end %>>
           </form>
 
           <ul class="nav pull-right">

@@ -3,6 +3,8 @@ Chat::Application.routes.draw do
 
   resources :messages
 
+  match 'search' => 'messages#search'
+
   root to: 'messages#index'
 
   # The priority is based upon order of creation:

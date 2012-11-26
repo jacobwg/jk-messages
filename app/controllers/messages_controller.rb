@@ -18,6 +18,23 @@ class MessagesController < ApplicationController
     end
   end
 
+  def search
+    if params[:q]
+      @query = params[:q]
+      @search = Message.search do
+        fulltext params[:q] do
+          highlight :body
+        end
+        paginate(:page => params[:page], :per_page => 20)
+      end
+      respond_to do |format|
+        format.html
+      end
+    else
+      redirect_to :root
+    end
+  end
+
   # GET /messages/1
   # GET /messages/1.json
   def show

@@ -41,4 +41,10 @@ gem 'rinku', require: 'rails_rinku'
 group :development do
   gem 'whenever'
   gem 'capistrano'
+  gem 'sunspot_solr'
 end
+
+# Search
+gem 'sunspot_rails'
+
+gem 'aasm'

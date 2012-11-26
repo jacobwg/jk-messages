@@ -2,7 +2,9 @@
 //= require jquery_ujs
 //= require bootstrap
 //= require jquery.timeago
-//= require turbolinks
+
+
+// require turbolinks
 
 var page = 1;
 var loading = false;
