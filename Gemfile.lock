@@ -196,6 +196,9 @@ GEM
     whenever (0.8.0)
       activesupport (>= 2.3.4)
       chronic (>= 0.6.3)
+    xmpp4r (0.5)
+    xmpp4r_facebook (0.1.1)
+      xmpp4r
 
 PLATFORMS
   ruby
@@ -225,3 +228,5 @@ DEPENDENCIES
   turbolinks
   uglifier (>= 1.0.3)
   whenever
+  xmpp4r
+  xmpp4r_facebook

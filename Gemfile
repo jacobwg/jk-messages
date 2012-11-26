@@ -48,3 +48,6 @@ end
 gem 'sunspot_rails'
 
 gem 'aasm'
+
+gem 'xmpp4r'
+gem 'xmpp4r_facebook'

@@ -51,8 +51,8 @@
 
         <ul class="nav">
           <!--<li><a><i class="icon-pe ncil icon-white status" data-content="test" data-trigger="click" data-placement="bottom" data-title="Jacob's Status"></a></i></li>-->
-          <li><a id="status-jacob">J<span class="hidden-phone">acob</span> <img src="<%= asset_path('status/online.png') %>" /></a>
-          <li><a id="status-kathryn">K<span class="hidden-phone">athryn</span> <img src="<%= asset_path('status/hollow.png') %>" /></a>
+          <li><a id="status-jacob">J<span class="hidden-phone">acob</span> <img src="<%= asset_path("status/#{@jacob.status.to_s}.png") %>" /></a>
+          <li><a id="status-kathryn">K<span class="hidden-phone">athryn</span> <img src="<%= asset_path("status/#{@kathryn.status.to_s}.png") %>" /></a>
           <!--<li><a><img src="<%= asset_path('status/offline.png') %>" /></a>
           <li><a><img src="<%= asset_path('status/writing.png') %>" /></a>
           <li class="ajax"><img src="<%= asset_path('ajax-loader.gif') %>"></li>-->
