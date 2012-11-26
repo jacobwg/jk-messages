@@ -12,8 +12,8 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require foundation
-//= require_tree .
+//= require bootstrap
+//= require jquery.timeago
 
 var page = 1;
 var loading = false;
@@ -23,6 +23,20 @@ window.done = false;
 
 
 jQuery(function($) {
+
+  $('#status-jacob').popover({
+    title: 'Jacob\'s Message Status',
+    content: 'Stuff goes here...',
+    trigger: 'hover',
+    placement: 'bottom'
+  });
+
+  $('#status-kathryn').popover({
+    title: 'Kathryn\'s Message Status',
+    content: 'Stuff goes here...',
+    trigger: 'hover',
+    placement: 'bottom'
+  });
 
   var pollMessages = function() {
     $.ajax({

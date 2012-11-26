@@ -9,12 +9,17 @@
  * compiled file, but it's generally better to create a new file per style scope.
  *
  *= require_self
- *= require foundation_and_overrides
- *= require_tree .
+ *= require bootstrap/bootstrap
+ *= require bootstrap/responsive
  */
 
-#more-container, #content {
+ .popover-title, .popover-content {
+  color:#333;
+ }
+
+#more-container {
   margin-top: 50px;
+  text-align: center;
 }
 
 .message {
@@ -25,6 +30,7 @@
 
 .message img {
   border: 3px solid #000;
+  border-radius: 3px;
 }
 
 .message.Kathryn {

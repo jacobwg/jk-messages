@@ -10,7 +10,7 @@
 	<!-- Set the viewport width to device width for mobile -->
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-	<title>Jacob and Kathryn's Facebook Messages</title>
+	<title>The J&K Messages</title>
 
 	<!-- Included CSS Files -->
 	<%= stylesheet_link_tag    "application" %>
@@ -39,25 +39,42 @@
 </head>
 <body>
 
-  <div class="container fixed">
-    <nav class="top-bar">
-      <ul>
-        <li class="name"><h1><a href="/">Jacob and Kathryn's Facebook Messages</a></h1></li>
-      </ul>
-      <section>
-        <ul class="left">
-          <li class="ajax"><img src="<%= asset_path('ajax-loader.gif') %>"></li>
+  <div class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="brand" href="/"><span class="hidden-phone">The </span>J&K Messages</a>
+
+        <ul class="nav">
+          <!--<li><a><i class="icon-pe ncil icon-white status" data-content="test" data-trigger="click" data-placement="bottom" data-title="Jacob's Status"></a></i></li>-->
+          <li><a id="status-jacob">J<span class="hidden-phone">acob</span> <img src="<%= asset_path('status/online.png') %>" /></a>
+          <li><a id="status-kathryn">K<span class="hidden-phone">athryn</span> <img src="<%= asset_path('status/hollow.png') %>" /></a>
+          <!--<li><a><img src="<%= asset_path('status/offline.png') %>" /></a>
+          <li><a><img src="<%= asset_path('status/writing.png') %>" /></a>
+          <li class="ajax"><img src="<%= asset_path('ajax-loader.gif') %>"></li>-->
         </ul>
-        <ul class="right">
-          <% if user_signed_in? %>
-          <li><a>Hello, <%= current_user.name %></a></li>
-          <li><%= link_to('Logout', destroy_user_session_path, :method => :delete) %></li>
-          <% else %>
-          <li><%= link_to "Sign in with Facebook", user_omniauth_authorize_path(:facebook) %></li>
-          <% end %>
-        </ul>
-      </section>
-    </nav>
+
+        <div class="nav-collapse collapse">
+
+          <form class="navbar-search pull-left">
+            <input type="text" class="search-query" placeholder="Search">
+          </form>
+
+          <ul class="nav pull-right">
+            <% if user_signed_in? %>
+            <li><a>Hello, <%= current_user.name %></a></li>
+            <li><%= link_to('Logout', destroy_user_session_path, :method => :delete) %></li>
+            <% else %>
+            <li><%= link_to "Sign in with Facebook", user_omniauth_authorize_path(:facebook) %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
   </div>
 
   <div class="container">
