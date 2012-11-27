@@ -3,6 +3,8 @@
 //= require bootstrap
 //= require jquery.timeago
 //= require heroku
+//= require jwerty
+//= require jquery.scrollTo
 
 
 // require turbolinks
@@ -13,8 +15,36 @@ var el, prevHeight;
 
 window.done = false;
 
+var focus_message = null;
+
+var scrollNextMessage = function() {
+  focus_message = focus_message || $('.message').first();
+
+  if ($(focus_message).next('.message').size() != 0) {
+    focus_message = $(focus_message).next('.message');
+  }
+  $(document).scrollTo(focus_message, {offset: -30});
+};
+
+var scrollPreviousMessage = function() {
+  focus_message = focus_message || $('.message').first();
+  if (focus_message && $(focus_message).prev('.message').size() != 0) {
+    focus_message = $(focus_message).prev('.message');
+  }
+  $(document).scrollTo(focus_message, {offset: -30});
+};
+
+
 
 jQuery(function($) {
+
+  jwerty.key('j', function () {
+    scrollNextMessage()
+  });
+
+  jwerty.key('k', function () {
+    scrollPreviousMessage()
+  });
 
   $('#status-jacob').popover({
     title: 'Jacob\'s Message Status',
