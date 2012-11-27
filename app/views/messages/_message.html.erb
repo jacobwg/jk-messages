@@ -1,15 +1,17 @@
-<div class="row message <%= message.sender %>">
-  <div class="span12">
-    <div class="media">
-      <% if message.sender == 'Jacob Gillespie' %>
-      <img src="<%= asset_path('jacob.jpg') %>" alt="Jacob Gillespie" class="media-object pull-left">
-      <% else %>
-      <img src="<%= asset_path('kathryn.jpg') %>" alt="Kathryn Elizabeth" class="media-object pull-left">
-      <% end %>
-      <div class="media-body">
-        <h4 class="media-heading"><abbr class="timeago" title="<%= message.time_cst %>"><%= message.date_formatted %></abbr></h4>
-        <%= auto_link(simple_format(message.body), :sanitize => false) %>
+<%= cache ['v1', message] do %>
+  <div class="row message <%= message.sender %>">
+    <div class="span12">
+      <div class="media">
+        <% if message.sender == 'Jacob Gillespie' %>
+        <img src="<%= asset_path('jacob.jpg') %>" alt="Jacob Gillespie" class="media-object pull-left">
+        <% else %>
+        <img src="<%= asset_path('kathryn.jpg') %>" alt="Kathryn Elizabeth" class="media-object pull-left">
+        <% end %>
+        <div class="media-body">
+          <h4 class="media-heading"><abbr class="timeago" title="<%= message.time_cst %>"><%= message.date_formatted %></abbr></h4>
+          <%= auto_link(simple_format(message.body), :sanitize => false) %>
+        </div>
       </div>
     </div>
   </div>
-</div>
+<% end %>

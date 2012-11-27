@@ -49,6 +49,9 @@ gem 'tire'
 
 gem 'aasm'
 
+# Caching
+gem 'dalli'
+
 gem 'xmpp4r'
 gem 'xmpp4r_facebook'
 
