@@ -2,13 +2,12 @@ class MessagesController < ApplicationController
   # GET /messages
   # GET /messages.json
   def index
-
     if params[:since]
       @since = true
-      @messages = Message.where('time > ?', Time.parse(params[:since])).order('time DESC').page(params[:page]).reverse
+      @messages = Message.where('time > ?', Time.parse(params[:since])).page(params[:page])
     else
-      @messages = Message.order('time DESC').page(params[:page]).reverse
-      @latest = @messages.last
+      @messages = Message.page(params[:page])
+      @latest = @messages.first
     end
 
     respond_to do |format|

@@ -1,11 +1,19 @@
-<div class="row" id="more-container">
+<div class="row center">
   <div class="span12">
-    <a class="btn btn-large btn-success" id="load-more">Load More Messages</a>
+    <%= paginate @messages %>
+    <%= page_entries_info(@messages) %>
   </div>
 </div>
 
 <div id="content">
   <%= render(@messages) %>
+</div>
+
+<div class="row center">
+  <div class="span12">
+    <%= paginate @messages %>
+    <%= page_entries_info(@messages) %>
+  </div>
 </div>
 
 <% if @messages.size > 0 %>

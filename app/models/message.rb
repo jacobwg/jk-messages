@@ -1,6 +1,10 @@
 class Message < ActiveRecord::Base
   attr_accessible :body, :facebook_id, :local_id, :sender, :time
 
+  default_scope order('time DESC')
+
+  paginates_per 6
+
   # Search
   searchable do
     text :body, :stored => true
@@ -14,8 +18,6 @@ class Message < ActiveRecord::Base
   def date_formatted
     time_cst.strftime('%B %e, %Y, %l:%M %P')
   end
-
-
 
   def self.import
     thread_id = '510521608973600'
