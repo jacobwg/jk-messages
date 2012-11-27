@@ -3,12 +3,25 @@ class Message < ActiveRecord::Base
 
   default_scope order('time DESC')
 
-  paginates_per 6
+  paginates_per 10
 
   # Search
-  searchable do
-    text :body, :stored => true
-    time :time
+  include Tire::Model::Search
+  include Tire::Model::Callbacks
+  mapping do
+    indexes :id, :index => :not_analyzed
+    indexes :body, :analyzer => 'snowball'
+    indexes :time, :type => 'date'
+    indexes :facebook_id, :index => :not_analyzed
+    indexes :local_id, :index => :not_analyzed
+    indexes :sender, :index => :not_analyzed
+  end
+
+  def self.search(params)
+    tire.search(load: true, page: (params[:page] || 1)) do
+      query { string params[:q] } #if params[:q].present?
+      sort { by :time, 'desc' }
+    end
   end
 
   def time_cst

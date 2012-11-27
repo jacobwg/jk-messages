@@ -20,12 +20,7 @@ class MessagesController < ApplicationController
   def search
     if params[:q]
       @query = params[:q]
-      @search = Message.search do
-        fulltext params[:q] do
-          highlight :body
-        end
-        paginate(:page => params[:page], :per_page => 20)
-      end
+      @messages = Message.search(params)
       respond_to do |format|
         format.html
       end

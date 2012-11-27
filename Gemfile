@@ -45,7 +45,7 @@ group :development do
 end
 
 # Search
-gem 'sunspot_rails'
+gem 'tire'
 
 gem 'aasm'
 

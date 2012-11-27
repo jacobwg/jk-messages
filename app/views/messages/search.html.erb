@@ -1,4 +1,4 @@
-<% if @search.hits.size == 0 %>
+<% if @messages.size == 0 %>
 <div class="row center" id="more-container">
   <div class="span12">
     <h1>No Results Found</h1>
@@ -9,19 +9,17 @@
 
 <div class="row center">
   <div class="span12">
-    <h1>Search Results <%= (@search.hits.current_page - 1) * @search.hits.per_page + 1 %> - <%= [@search.hits.current_page * @search.hits.per_page, @search.total].min %> of <%= @search.total %></h1>
-
-    <%= paginate @search.hits %>
+    <%= paginate @messages %>
   </div>
 </div>
 
 <div id="content">
-  <%= render(@search.results) %>
+  <%= render(@messages) %>
 </div>
 
 <div class="row center">
   <div class="span12">
-    <%= paginate @search.hits %>
+    <%= paginate @messages %>
   </div>
 </div>
 
