@@ -52,7 +52,6 @@ gem 'aasm'
 # Caching
 gem 'dalli'
 
-gem 'xmpp4r'
-gem 'xmpp4r_facebook'
+gem 'blather', :git => 'https://github.com/jacobwg/blather.git', :branch => 'facebook-platform'
 
 gem 'pubnub'

@@ -93,7 +93,14 @@ jQuery(function($) {
     channel    : "pubnub",
     restore    : false,              // STAY CONNECTED, EVEN WHEN BROWSER IS CLOSED
     callback   : function(message) { // RECEIVED A MESSAGE.
-      modal('Incoming Message', message);
+      //modal('Incoming Message', message);
+
+      message = $.parseJSON(message);
+      window.m = message;
+      //console.log(message);
+      if (message.action === 'status') {
+        $('#status-' + message.data.uid).attr('src', '/assets/status/' + message.data.status + '.png');
+      }
     },
     disconnect : function() {},        // LOST CONNECTION.
     reconnect  : function() {},        // CONNECTION RESTORED.

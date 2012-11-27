@@ -1,3 +1,15 @@
+GIT
+  remote: https://github.com/jacobwg/blather.git
+  revision: 78479509a7162d0937ed9bc72baa5b3e42048d0f
+  branch: facebook-platform
+  specs:
+    blather (0.8.1)
+      activesupport (>= 2.3.11)
+      eventmachine (>= 0.12.6)
+      girl_friday
+      niceogiri (~> 1.0)
+      nokogiri (~> 1.5.5)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -49,6 +61,7 @@ GEM
       execjs
     coffee-script-source (1.4.0)
     commonjs (0.2.6)
+    connection_pool (0.9.2)
     cookiejar (0.3.0)
     daemons (1.1.9)
     dalli (2.5.0)
@@ -76,6 +89,9 @@ GEM
       json
       rack-oauth2 (>= 0.14.4)
       tzinfo
+    girl_friday (0.11.1)
+      connection_pool (~> 0.9.0)
+      rubinius-actor
     hashie (1.2.0)
     hashr (0.0.22)
     highline (1.6.15)
@@ -120,6 +136,9 @@ GEM
     net-ssh (2.6.1)
     net-ssh-gateway (1.1.0)
       net-ssh (>= 1.99.1)
+    niceogiri (1.1.1)
+      nokogiri (~> 1.5)
+    nokogiri (1.5.5)
     oauth2 (0.8.0)
       faraday (~> 0.8)
       httpauth (~> 0.1)
@@ -177,6 +196,9 @@ GEM
     rest-client (1.6.7)
       mime-types (>= 1.16)
     rinku (1.7.2)
+    rubinius-actor (0.0.2)
+      rubinius-core-api
+    rubinius-core-api (0.0.1)
     sass (3.2.3)
     sass-rails (3.2.5)
       railties (~> 3.2.0)
@@ -218,9 +240,6 @@ GEM
     whenever (0.8.0)
       activesupport (>= 2.3.4)
       chronic (>= 0.6.3)
-    xmpp4r (0.5)
-    xmpp4r_facebook (0.1.1)
-      xmpp4r
     yajl-ruby (1.1.0)
 
 PLATFORMS
@@ -228,6 +247,7 @@ PLATFORMS
 
 DEPENDENCIES
   aasm
+  blather!
   capistrano
   coffee-rails (~> 3.2.1)
   dalli
@@ -253,5 +273,3 @@ DEPENDENCIES
   turbolinks
   uglifier (>= 1.0.3)
   whenever
-  xmpp4r
-  xmpp4r_facebook
