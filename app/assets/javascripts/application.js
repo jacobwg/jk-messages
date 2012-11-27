@@ -34,6 +34,11 @@ var scrollPreviousMessage = function() {
   $(document).scrollTo(focus_message, {offset: -30});
 };
 
+var modal = function(title, message) {
+  $('#modal #modelHeader').html(title);
+  $('#modal .modal-body').html(message);
+  $('#modal').modal();
+};
 
 
 jQuery(function($) {
@@ -82,4 +87,17 @@ jQuery(function($) {
 
   $("abbr.timeago").timeago();
   $('.ajax').hide();
+
+
+  PUBNUB.subscribe({
+    channel    : "pubnub",
+    restore    : false,              // STAY CONNECTED, EVEN WHEN BROWSER IS CLOSED
+    callback   : function(message) { // RECEIVED A MESSAGE.
+      modal('Incoming Message', message);
+    },
+    disconnect : function() {},        // LOST CONNECTION.
+    reconnect  : function() {},        // CONNECTION RESTORED.
+    connect    : function() {},        // CONNECTION ESTABLISHED.
+  });
+
 });
