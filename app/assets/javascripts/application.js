@@ -2,6 +2,7 @@
 //= require jquery_ujs
 //= require bootstrap
 //= require jquery.timeago
+//= require heroku
 
 
 // require turbolinks
