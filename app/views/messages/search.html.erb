@@ -1,26 +1,30 @@
-<% if @messages.size == 0 %>
-<div class="row center" id="more-container">
-  <div class="span12">
-    <h1>No Results Found</h1>
+<div class="container">
+
+  <% if @messages.size == 0 %>
+  <div class="row center">
+    <div class="span12">
+      <h1>No Results Found</h1>
+    </div>
   </div>
-</div>
 
-<% else %>
+  <% else %>
 
-<div class="row center">
-  <div class="span12">
-    <%= paginate @messages %>
+  <div class="row center">
+    <div class="span12">
+      <%= paginate @messages %>
+    </div>
   </div>
-</div>
 
-<div id="content">
-  <%= render(@messages) %>
-</div>
-
-<div class="row center">
-  <div class="span12">
-    <%= paginate @messages %>
+  <div id="content">
+    <%= render(@messages) %>
   </div>
-</div>
 
-<% end %>
+  <div class="row center">
+    <div class="span12">
+      <%= paginate @messages %>
+    </div>
+  </div>
+
+  <% end %>
+
+</div>

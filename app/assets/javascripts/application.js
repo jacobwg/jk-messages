@@ -45,7 +45,7 @@ jQuery(function($) {
     window.scrollTo(0, document.body.scrollHeight);
   };
 
-  setInterval(pollMessages, 10000);
+  //setInterval(pollMessages, 10000);
   //scrollToBottom();
   //setTimeout(scrollToBottom, 1000);
 

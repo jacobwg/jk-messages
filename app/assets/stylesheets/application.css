@@ -345,6 +345,10 @@ h2 + .row {
   background-color: #fffacd;
 }
 
+#timeline-embed {
+  height: 600px;
+}
+
 .jumbotron {
   font-family: 'Tangerine', "Helvetica Neue", Helvetica, Arial, cursive;
 
