@@ -267,6 +267,7 @@ h2 + .row {
 /* Landscape phones
 ------------------------- */
 @media (max-width: 480px) {
+
   /* Remove padding above jumbotron */
   body {
     padding-top: 0;
@@ -352,9 +353,6 @@ h2 + .row {
 
 .jumbotron {
   font-family: 'Tangerine', "Helvetica Neue", Helvetica, Arial, cursive;
-
-  //color: #222;
-
   background: transparent url('/assets/banner.jpg') no-repeat center top scroll;
   -webkit-background-size: cover;
   -moz-background-size: cover;
@@ -362,6 +360,12 @@ h2 + .row {
   background-size: cover;
   filter: progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/assets/banner.jpg', sizingMethod='scale');
   -ms-filter: "progid:DXImageTransform.Microsoft.AlphaImageLoader(src='/assets/banner.jpg', sizingMethod='scale')";
+}
+
+@media (max-width: 480px) {
+  .navbar-search .search-query {
+    width: 120px;
+  }
 }
 
 

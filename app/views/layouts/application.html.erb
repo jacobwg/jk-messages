@@ -49,28 +49,20 @@
           <span class="icon-bar"></span>
         </button>
 
-        <a class="brand" href="/"><span class="hidden-phone">The </span>J&amp;K Messages</a>
+        <a class="brand hidden-phone" href="/">The J&amp;K&nbsp;Messages</a>
 
-        <!--<ul class="nav">
-          <li><a id="status-jacob">Jacob <img src="<%= asset_path("status/#{@jacob.status.to_s}.png") %>" /></a>
-          <li><a id="status-kathryn">Kathryn <img src="<%= asset_path("status/#{@kathryn.status.to_s}.png") %>" /></a>
-        </ul>-->
+        <form class="navbar-search pull-left" action="/search" method="get">
+          <input type="text" class="search-query" placeholder="Search" name="q"<% if @query %>value="<%= @query %>"<% end %>>
+        </form>
 
-        <div class="hidden-desktop">
-          <form class="navbar-search pull-left" action="/search" method="get">
-            <input type="text" class="search-query" placeholder="Search" name="q"<% if @query %>value="<%= @query %>"<% end %>>
-          </form>
-        </div>
+        <ul class="nav pull-left">
+          <li><a>J<span class="hidden-phone">acob</span> <img src="<%= asset_path("status/#{@jacob.status.to_s}.png") %>" /></a></li>
+          <li><a>K<span class="hidden-phone">athryn</span> <img src="<%= asset_path("status/#{@kathryn.status.to_s}.png") %>" /></a></li>
+        </ul>
 
         <div class="nav-collapse collapse">
-
-          <div class="visible-desktop">
-            <form class="navbar-search pull-left" action="/search" method="get">
-              <input type="text" class="search-query" placeholder="Search" name="q"<% if @query %>value="<%= @query %>"<% end %>>
-            </form>
-          </div>
-
           <ul class="nav pull-right">
+            <li class="visible-phone"><a href="/">Home</a></li>
             <% if user_signed_in? %>
             <li><a>Hello, <%= current_user.name %></a></li>
             <li><%= link_to('Logout', destroy_user_session_path, :method => :delete) %></li>
