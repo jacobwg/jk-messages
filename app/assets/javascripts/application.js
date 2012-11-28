@@ -71,7 +71,7 @@ jQuery(function($) {
       type: 'get',
       dataType: 'script',
       success: function() {
-        $("abbr.timeago").timeago();
+        //$("abbr.timeago").timeago();
       }
     });
   };
@@ -85,7 +85,7 @@ jQuery(function($) {
   //scrollToBottom();
   //setTimeout(scrollToBottom, 1000);
 
-  $("abbr.timeago").timeago();
+  //$("abbr.timeago").timeago();
   $('.ajax').hide();
 
 

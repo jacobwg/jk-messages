@@ -29,7 +29,7 @@ class Message < ActiveRecord::Base
   end
 
   def date_formatted
-    time_cst.strftime('%B %e, %Y, %l:%M %P')
+    time_cst.strftime('%B %e, %Y - %l:%M %P')
   end
 
   def self.import
