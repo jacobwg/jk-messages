@@ -10,6 +10,7 @@
         <div class="media-body">
           <h4 class="media-heading"><abbr class="timeago" title="<%= message.time_cst %>"><%= message.date_formatted %></abbr></h4>
           <%= auto_link(simple_format(message.body), :sanitize => false) %>
+          <%= link_to("See more from #{message.time_cst.strftime('%B %e, %Y')}", '/?day=' + [message.time.year, message.time.month, message.time.day].join('-'), class: 'seeMore') %>
         </div>
       </div>
     </div>

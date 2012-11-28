@@ -1,7 +1,7 @@
 class Message < ActiveRecord::Base
   attr_accessible :body, :facebook_id, :local_id, :sender, :time
 
-  default_scope order('time DESC')
+  default_scope order('time ASC')
 
   paginates_per 10
 

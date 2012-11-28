@@ -5,6 +5,7 @@
 //= require heroku
 //= require jwerty
 //= require jquery.scrollTo
+//= require jquery.ui.datepicker
 
 
 // require turbolinks
@@ -42,6 +43,25 @@ var modal = function(title, message) {
 
 
 jQuery(function($) {
+
+  var options = {
+    minDate: new Date(2012, 8 - 1, 13),
+    maxDate: new Date(),
+    dateFormat: 'yy-mm-dd',
+    onSelect: function(day) {
+      window.location = ('/?day=' + day);
+    }
+  };
+
+  if (window.defaultDate) {
+    options.defaultDate = window.defaultDate;
+  }
+
+  if (window.maxDate) {
+    options.maxDate = window.maxDate;
+  }
+
+  $('.datepicker').datepicker(options);
 
   jwerty.key('j', function () {
     scrollNextMessage()

@@ -13,6 +13,7 @@
  *= require bootstrap/responsive
  *= require_self
  *= require heroku
+ *= require jquery.ui.datepicker
  */
 
 
@@ -366,6 +367,22 @@ h2 + .row {
   .navbar-search .search-query {
     width: 120px;
   }
+}
+
+.day .currentDay {
+  font-weight: bold;
+}
+
+.day.otherMonth {
+  color: #999;
+}
+
+.seeMore {
+  display: none;
+}
+
+.search .seeMore {
+  display: inline;
 }
 
 

@@ -1,14 +1,13 @@
 class MessagesController < ApplicationController
+  helper LaterDude::CalendarHelper
+
   # GET /messages
   # GET /messages.json
   def index
-    if params[:since]
-      @since = true
-      @messages = Message.where('time > ?', Time.parse(params[:since])).page(params[:page])
-    else
-      @messages = Message.page(params[:page])
-      @latest = @messages.first
-    end
+    @last_day = Message.last.time_cst.to_date
+    @day = !params[:day].nil? ? Date.parse(params[:day]) : @last_day
+
+    @messages = Message.where(['time >= ? and time <= ?', @day.to_time.beginning_of_day, @day.to_time.end_of_day])
 
     respond_to do |format|
       format.html # index.html.erb
