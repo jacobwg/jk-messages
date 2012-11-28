@@ -7,6 +7,8 @@ Chat::Application.routes.draw do
 
   resources :messages
 
+  resources :users, :only => :index
+
   match 'search' => 'messages#search'
 
   root to: 'messages#index'

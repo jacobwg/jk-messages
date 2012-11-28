@@ -34,6 +34,36 @@ var scrollPreviousMessage = function() {
   $(document).scrollTo(focus_message, {offset: -30});
 };
 
+var setUserStatus = function(uid, status) {
+  var el = $('#status-' + uid);
+
+  el.attr('src', '/assets/status/' + status + '.png');
+  var message = '';
+  var name = el.data('name');
+  message = name;
+  switch (status) {
+    case 'offline':
+      message += ' is offline and has not started on today\'s message...'
+      break;
+    case 'online':
+      message += ' is online but has not started on today\'s message...'
+      break;
+    case 'writing':
+      message += ' has started on today\'s message...'
+      break;
+    case 'sent':
+      title = 'Sent';
+      message += ' has sent today\'s message...'
+      break;
+  }
+  el.parent().attr('title', message);
+  el.parent().tooltip('destroy');
+  el.parent().tooltip({
+    title: message,
+    placement: 'bottom'
+  });
+}
+
 
 jQuery(function($) {
 
@@ -79,20 +109,20 @@ jQuery(function($) {
     placement: 'bottom'
   });
 
-  var pollMessages = function() {
+  window.fetchUserStatus = function() {
     $.ajax({
-      url: '/messages?since=' + window.since.toString(),
+      url: '/users',
       type: 'get',
-      dataType: 'script',
-      success: function() {
-        //$("abbr.timeago").timeago();
+      dataType: 'json',
+      success: function(data) {
+        $.each(data, function(id, user) {
+          setUserStatus(user.uid, user.status);
+        });
       }
     });
   };
 
-  //setInterval(pollMessages, 10000);
-
-  //$("abbr.timeago").timeago();
+  window.fetchUserStatus();
 
   PUBNUB.subscribe({
     channel    : "pubnub",
@@ -101,16 +131,16 @@ jQuery(function($) {
       message = $.parseJSON(message);
       switch (message.action) {
         case 'status':
-          $('#status-' + message.data.uid).attr('src', '/assets/status/' + message.data.status + '.png');
+          setUserStatus(message.data.uid, message.data.status);
           break;
         case 'message':
           bootbox.alert(message.data.message);
           break;
       }
     },
-    disconnect : function() {},        // LOST CONNECTION.
-    reconnect  : function() {},        // CONNECTION RESTORED.
-    connect    : function() {},        // CONNECTION ESTABLISHED.
+    disconnect : function() {},
+    reconnect  : function() {},
+    connect    : function() {},
   });
 
 });

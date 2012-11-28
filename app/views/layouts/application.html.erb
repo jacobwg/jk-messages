@@ -1,23 +1,29 @@
 <!DOCTYPE html>
-<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
-<!--[if lt IE 7 ]> <html class="ie6" lang="en"> <![endif]-->
-<!--[if IE 7 ]>    <html class="ie7" lang="en"> <![endif]-->
-<!--[if IE 8 ]>    <html class="ie8" lang="en"> <![endif]-->
-<!--[if (gte IE 9)|!(IE)]><!--> <html lang="en"> <!--<![endif]-->
+<html lang="en">
 <head>
 	<meta charset="utf-8" />
 
-	<!-- Set the viewport width to device width for mobile -->
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>J&amp;K Messages</title>
 
-	<title>The J&amp;K Messages</title>
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta http-equiv="cleartype" content="on">
 
-	<!-- Included CSS Files -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/assets/touch/apple-touch-icon-144x144-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/assets/touch/apple-touch-icon-114x114-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/assets/touch/apple-touch-icon-72x72-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" href="/assets/touch/apple-touch-icon-57x57-precomposed.png">
+  <link rel="shortcut icon" href="/assets/touch/apple-touch-icon.png">
+
+
   <link href='http://fonts.googleapis.com/css?family=Tangerine' rel='stylesheet' type='text/css'>
 	<%= stylesheet_link_tag    "application" %>
 
-	<!-- Included JS Files  -->
-	<%= javascript_include_tag "application" %>
+  <%= javascript_include_tag "application" %>
 
   <%= csrf_meta_tags %>
 
@@ -56,10 +62,10 @@
         </form>
 
         <ul class="nav pull-left">
-          <li class="divider-vertical"></li>
-          <li><a>J<span class="hidden-phone">acob</span> <img id="status-<%= Settings.jacob_id %>" src="<%= asset_path("status/#{@jacob.status.to_s}.png") %>" /></a></li>
-          <li><a>K<span class="hidden-phone">athryn</span> <img id="status-<%= Settings.kathryn_id %>" src="<%= asset_path("status/#{@kathryn.status.to_s}.png") %>" /></a></li>
-          <li class="divider-vertical"></li>
+          <li class="divider-vertical hidden-phone"></li>
+          <li><a rel="tooltip">J<span class="hidden-phone">acob</span> <img id="status-<%= Settings.jacob_id %>" src="<%= asset_path("status/#{@jacob.status.to_s}.png") %>" data-name="Jacob" /></a></li>
+          <li><a rel="tooltip">K<span class="hidden-phone">athryn</span> <img id="status-<%= Settings.kathryn_id %>" src="<%= asset_path("status/#{@kathryn.status.to_s}.png") %>" data-name="Kathryn" /></a></li>
+          <li class="divider-vertical hidden-phone"></li>
         </ul>
 
         <div class="nav-collapse collapse">

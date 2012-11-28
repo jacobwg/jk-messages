@@ -7,7 +7,7 @@ class MessagesController < ApplicationController
     @messages = Message.where(['time >= ? and time <= ?', @day.to_time.beginning_of_day, @day.to_time.end_of_day])
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html
       format.js
       format.json { render json: @messages }
     end
