@@ -8,6 +8,7 @@
 //= require jquery.scrollTo
 //= require jquery.ui.datepicker
 //= require turbolinks
+//= require mobile
 
 var page = 1;
 var loading = false;
