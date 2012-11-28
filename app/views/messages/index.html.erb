@@ -18,8 +18,7 @@
       <div class="span12">
         <h1>Messages from <%= @day.strftime('%B %e, %Y') %></h1>
         <p><a href="#myModal" role="button" class="btn btn-success" data-toggle="modal">Pick Day</a></p>
-        <p><%= link_to("&larr; Previous Day".html_safe, '/?day=' + [@day.prev_day.year, @day.prev_day.month, @day.prev_day.day].join('-')) %> |
-        <%= link_to("Next Day &rarr;".html_safe, '/?day=' + [@day.next_day.year, @day.next_day.month, @day.next_day.day].join('-')) %></p>
+        <%= render 'pagination' %>
       </div>
     </div>
   </div>
@@ -38,8 +37,7 @@
   <div class="container center">
     <div class="row">
       <div class="span12">
-        <p><%= link_to("&larr; Previous Day".html_safe, '/?day=' + [@day.prev_day.year, @day.prev_day.month, @day.prev_day.day].join('-')) %> |
-        <%= link_to("Next Day &rarr;".html_safe, '/?day=' + [@day.next_day.year, @day.next_day.month, @day.next_day.day].join('-')) %></p>
+        <%= render 'pagination' %>
       </div>
     </div>
   </div>

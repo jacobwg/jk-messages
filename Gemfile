@@ -52,8 +52,6 @@ gem 'aasm'
 # Caching
 gem 'dalli'
 
-gem 'later_dude'
-
 gem 'jquery-ui-rails'
 
 gem 'blather', :git => 'https://github.com/jacobwg/blather.git', :branch => 'facebook-platform'

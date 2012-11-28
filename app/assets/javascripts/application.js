@@ -48,6 +48,7 @@ jQuery(function($) {
     minDate: new Date(2012, 8 - 1, 13),
     maxDate: new Date(),
     dateFormat: 'yy-mm-dd',
+    showButtonPanel: true,
     onSelect: function(day) {
       window.location = ('/?day=' + day);
     }
