@@ -6,9 +6,7 @@
 //= require jwerty
 //= require jquery.scrollTo
 //= require jquery.ui.datepicker
-
-
-// require turbolinks
+//= require turbolinks
 
 var page = 1;
 var loading = false;
@@ -97,18 +95,9 @@ jQuery(function($) {
     });
   };
 
-  var scrollToBottom = function() {
-    //$('body').scrollTop($('body').prop('scrollHeight'));
-    window.scrollTo(0, document.body.scrollHeight);
-  };
-
   //setInterval(pollMessages, 10000);
-  //scrollToBottom();
-  //setTimeout(scrollToBottom, 1000);
 
   //$("abbr.timeago").timeago();
-  $('.ajax').hide();
-
 
   PUBNUB.subscribe({
     channel    : "pubnub",
