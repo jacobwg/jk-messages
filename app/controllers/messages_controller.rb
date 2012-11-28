@@ -1,6 +1,4 @@
 class MessagesController < ApplicationController
-  helper LaterDude::CalendarHelper
-
   # GET /messages
   # GET /messages.json
   def index
