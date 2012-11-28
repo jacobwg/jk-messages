@@ -56,8 +56,10 @@
         </form>
 
         <ul class="nav pull-left">
-          <li><a>J<span class="hidden-phone">acob</span> <img id="status-<%= @jacob.uid %>" src="<%= asset_path("status/#{@jacob.status.to_s}.png") %>" /></a></li>
-          <li><a>K<span class="hidden-phone">athryn</span> <img id="status-<%= @kathryn.uid %>" src="<%= asset_path("status/#{@kathryn.status.to_s}.png") %>" /></a></li>
+          <li class="divider-vertical"></li>
+          <li><a>J<span class="hidden-phone">acob</span> <img id="status-<%= Settings.jacob_id %>" src="<%= asset_path("status/#{@jacob.status.to_s}.png") %>" /></a></li>
+          <li><a>K<span class="hidden-phone">athryn</span> <img id="status-<%= Settings.kathryn_id %>" src="<%= asset_path("status/#{@kathryn.status.to_s}.png") %>" /></a></li>
+          <li class="divider-vertical"></li>
         </ul>
 
         <div class="nav-collapse collapse">
