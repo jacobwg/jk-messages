@@ -1,6 +1,7 @@
 //= require jquery
 //= require jquery_ujs
 //= require bootstrap
+//= require bootbox
 //= require jquery.timeago
 //= require heroku
 //= require jwerty
@@ -31,12 +32,6 @@ var scrollPreviousMessage = function() {
     focus_message = $(focus_message).prev('.message');
   }
   $(document).scrollTo(focus_message, {offset: -30});
-};
-
-var modal = function(title, message) {
-  $('#modal #modelHeader').html(title);
-  $('#modal .modal-body').html(message);
-  $('#modal').modal();
 };
 
 
@@ -103,13 +98,14 @@ jQuery(function($) {
     channel    : "pubnub",
     restore    : false,              // STAY CONNECTED, EVEN WHEN BROWSER IS CLOSED
     callback   : function(message) { // RECEIVED A MESSAGE.
-      //modal('Incoming Message', message);
-
       message = $.parseJSON(message);
-      window.m = message;
-      //console.log(message);
-      if (message.action === 'status') {
-        $('#status-' + message.data.uid).attr('src', '/assets/status/' + message.data.status + '.png');
+      switch (message.action) {
+        case 'status':
+          $('#status-' + message.data.uid).attr('src', '/assets/status/' + message.data.status + '.png');
+          break;
+        case 'message':
+          bootbox.alert(message.data.message);
+          break;
       }
     },
     disconnect : function() {},        // LOST CONNECTION.
