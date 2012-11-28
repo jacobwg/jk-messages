@@ -47,6 +47,12 @@ class User < ActiveRecord::Base
     end
   end
 
+  def self.reset_quotas!
+    User.find_each do |u|
+      u.refill_quota! if u.sent?
+    end
+  end
+
   def self.find_for_facebook_oauth(auth, signed_in_resource=nil)
     user = User.where(:provider => auth.provider, :uid => auth.uid).first
     if user
