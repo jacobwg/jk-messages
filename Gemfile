@@ -21,7 +21,7 @@ end
 # Javascript Framework
 gem 'jquery-rails'
 
-#gem 'turbolinks'
+gem 'turbolinks'
 
 # Facebook APIs
 gem 'koala'
