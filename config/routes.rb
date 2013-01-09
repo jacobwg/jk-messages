@@ -1,15 +1,16 @@
 Chat::Application.routes.draw do
   get "pages/about"
-
   get "pages/timeline"
 
   devise_for :users, controllers: {omniauth_callbacks: 'omniauth_callbacks'}
 
-  resources :messages
+  resources :messages, :only => :index
 
   resources :users, :only => :index
 
   match 'search' => 'messages#search'
+
+  get ':day' => 'messages#index', :as => :date
 
   root to: 'messages#index'
 

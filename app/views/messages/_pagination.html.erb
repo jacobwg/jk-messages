@@ -1,2 +1,18 @@
-<p><%= link_to("&larr; Previous Day".html_safe, '/?day=' + [@day.prev_day.year, @day.prev_day.month, @day.prev_day.day].join('-')) %> |
-<%= link_to("Next Day &rarr;".html_safe, '/?day=' + [@day.next_day.year, @day.next_day.month, @day.next_day.day].join('-')) %></p>
+<% unless @day == @last_day %>
+  <p><%= link_to 'Go to Most Recent Messages', :root, :class => 'btn' %></p>
+<% end %>
+
+<p><a href="#myModal" role="button" class="btn btn-success" data-toggle="modal">Pick Day</a></p>
+
+<ul class="pager">
+  <% if @day.prev_day < Date.parse('2012-08-13') %>
+    <li class="previous disabled"><a>&larr; Previous Day</a></li>
+  <% else %>
+    <li class="previous"><%= link_to("&larr; Previous Day".html_safe, date_path([@day.prev_day.year, @day.prev_day.month, @day.prev_day.day].join('-'))) %></li>
+  <% end %>
+  <% if @day.next_day > @last_day %>
+    <li class="next disabled"><a>Next Day &rarr;</a></li>
+  <% else %>
+    <li class="next"><%= link_to("Next Day &rarr;".html_safe, date_path([@day.next_day.year, @day.next_day.month, @day.next_day.day].join('-'))) %></li>
+  <% end %>
+</ul>

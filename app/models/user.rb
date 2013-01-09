@@ -12,12 +12,6 @@ class User < ActiveRecord::Base
 
   attr_accessible :status, :icon
 
-  after_save :broadcast_status
-
-  def broadcast_status
-    Message.publish(:status, {:uid => uid, :status => status, :icon => icon})
-  end
-
   def icon
     read_attribute(:icon) || 'ok'
   end
@@ -60,91 +54,4 @@ class User < ActiveRecord::Base
     end
   end
 
-  def self.track_state
-
-    jacob_observer = ChatStatusWatcher.new(Settings.kathryn_id, Settings.jacob_id)
-    kathryn_observer = ChatStatusWatcher.new(Settings.jacob_id, Settings.kathryn_id)
-
-    trap(:INT) { EM.stop }
-    trap(:TERM) { EM.stop }
-    EM.run do
-      jacob_observer.run
-      kathryn_observer.run
-    end
-
-=begin
-    puts 'Loading...'
-
-    uids = []
-    uids << Settings.jacob_id
-    uids << Settings.kathryn_id
-
-    uids.each do |uid|
-      Thread.new do
-        user = User.where(uid: uid).first
-        access_token = user.token
-        user_jid =  Jabber::JID.new("-#{uid}@chat.facebook.com")
-
-        client = Jabber::Client.new Jabber::JID.new("-#{uid}@chat.facebook.com")
-        client.connect
-        client.auth_sasl(Jabber::SASL::XFacebookPlatform.new(client, Settings.fb_id, access_token, Settings.fb_secret), nil)
-
-        roster = Jabber::Roster::Helper.new(client)
-
-        roster.add_presence_callback do |item, old_presence, presence|
-          uids.each do |other_uid|
-            if presence.from == Jabber::JID.new("-#{other_uid}@chat.facebook.com")
-              puts "we got a valid presence notification"
-              User.transaction do
-                u = User.lock.where(uid: other_uid).first
-                if presence.type == :unavailable and u.online?
-                  u.go_offline!
-                elsif u.offline?
-                  u.go_online!
-                end
-              end
-            end
-          end
-        end
-
-        client.add_message_callback do |message|
-          uids.each do |other_uid|
-            if message.from == Jabber::JID.new("-#{other_uid}@chat.facebook.com")
-              puts "we got a valid message notification"
-              User.transaction do
-                u = User.lock.where(uid: other_uid).first
-                if message.composing?
-                  u.start_writing
-                elsif !message.body.nil?
-                  u.send_message
-                end
-                u.save
-              end
-            end
-          end
-        end
-
-        client.send(Jabber::Presence.new)
-
-        Signal.trap("INT") do
-          puts "Got interrupt - closing XMPP connection"
-          client.close
-          Thread.exit
-        end
-
-        while 1
-          sleep 1
-        end
-      end
-    end
-
-    puts "Running..."
-
-    main     = Thread.main       # The main thread
-    current  = Thread.current    # The current thread
-    all      = Thread.list       # All threads still running
-    # Now call join on each thread
-    all.each{|t| t.join unless t == current or t == main }
-=end
-  end
 end

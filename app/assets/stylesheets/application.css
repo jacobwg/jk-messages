@@ -365,7 +365,7 @@ h2 + .row {
 
 @media (max-width: 480px) {
   .navbar-search .search-query {
-    width: 120px;
+    width: 110px;
   }
 }
 

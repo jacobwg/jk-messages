@@ -53,13 +53,4 @@ class Message < ActiveRecord::Base
     end
   end
 
-  def self.pubnub
-    @@pn ||= Pubnub.new(:publish_key => Settings.pubnub.publish, :subscribe_key => Settings.pubnub.subscribe)
-  end
-
-  def self.publish(action, data={})
-    callback = lambda { |message| Rails.logger.info(message) }
-    message = {:action => action, :data => data}
-    self.pubnub.publish(:channel => :pubnub, :message => message.to_json, :callback => callback)
-  end
 end

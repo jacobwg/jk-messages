@@ -55,9 +55,8 @@ jQuery(function($) {
     minDate: new Date(2012, 8 - 1, 13),
     maxDate: new Date(),
     dateFormat: 'yy-mm-dd',
-    showButtonPanel: true,
     onSelect: function(day) {
-      window.location = ('/?day=' + day);
+      window.location = ('/' + day);
     }
   };
 
@@ -93,25 +92,5 @@ jQuery(function($) {
   };
 
   window.fetchUserStatus();
-
-  PUBNUB.subscribe({
-    channel    : "pubnub",
-    restore    : false,              // STAY CONNECTED, EVEN WHEN BROWSER IS CLOSED
-    callback   : function(message) { // RECEIVED A MESSAGE.
-      message = $.parseJSON(message);
-      console.log(message);
-      switch (message.action) {
-        case 'status':
-          setUserStatus(message.data.uid, message.data.status, message.data.icon);
-          break;
-        case 'message':
-          bootbox.alert(message.data.message);
-          break;
-      }
-    },
-    disconnect : function() {},
-    reconnect  : function() {},
-    connect    : function() {},
-  });
 
 });

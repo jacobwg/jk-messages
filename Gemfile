@@ -54,6 +54,3 @@ gem 'dalli'
 
 gem 'jquery-ui-rails'
 
-gem 'blather', :git => 'https://github.com/jacobwg/blather.git', :branch => 'facebook-platform'
-
-gem 'pubnub'
