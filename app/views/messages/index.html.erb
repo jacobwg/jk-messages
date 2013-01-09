@@ -57,4 +57,5 @@
 <script type="text/javascript">
   window.defaultDate = new Date(<%= @day.year %>, <%= @day.month %> - 1, <%= @day.day %>);
   window.maxDate = new Date(<%= @last_day.year %>, <%= @last_day.month %> - 1, <%= @last_day.day %>);
+  window.unsentDays = <%= @unsent_days.to_json.html_safe %>;
 </script>

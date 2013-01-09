@@ -5,7 +5,7 @@
 <p><a href="#myModal" role="button" class="btn btn-success" data-toggle="modal">Pick Day</a></p>
 
 <ul class="pager">
-  <% if @day.prev_day < Date.parse('2012-08-13') %>
+  <% if @day.prev_day < @first_day %>
     <li class="previous disabled"><a>&larr; Previous Day</a></li>
   <% else %>
     <li class="previous"><%= link_to("&larr; Previous Day".html_safe, date_path([@day.prev_day.year, @day.prev_day.month, @day.prev_day.day].join('-'))) %></li>

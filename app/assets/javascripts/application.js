@@ -8,6 +8,7 @@
 //= require jquery.scrollTo
 //= require jquery.ui.datepicker
 //= require mobile
+//= require moment
 
 var page = 1;
 var loading = false;
@@ -35,9 +36,7 @@ var scrollPreviousMessage = function() {
 };
 
 var setUserStatus = function(uid, status, icon) {
-  console.log('called');
   var el = $('#status-' + uid);
-  console.log(el);
 
   el.attr('class', 'icon-' + icon);
   el.parent().attr('title', status);
@@ -51,12 +50,22 @@ var setUserStatus = function(uid, status, icon) {
 
 jQuery(function($) {
 
+  var blockedDays = $.map(window.unsentDays, function(day) {
+    return day;
+    //return moment(day);
+  });
+
   var options = {
     minDate: new Date(2012, 8 - 1, 13),
     maxDate: new Date(),
     dateFormat: 'yy-mm-dd',
     onSelect: function(day) {
       window.location = ('/' + day);
+    },
+    beforeShowDay: function(day) {
+      var show = $.inArray(moment(day).format("YYYY-MM-DD"), blockedDays) == -1;
+      window.day = day;
+      return [show, '', ''];
     }
   };
 
