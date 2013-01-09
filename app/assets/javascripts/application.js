@@ -34,32 +34,16 @@ var scrollPreviousMessage = function() {
   $(document).scrollTo(focus_message, {offset: -30});
 };
 
-var setUserStatus = function(uid, status) {
+var setUserStatus = function(uid, status, icon) {
+  console.log('called');
   var el = $('#status-' + uid);
+  console.log(el);
 
-  el.attr('src', '/assets/status/' + status + '.png');
-  var message = '';
-  var name = el.data('name');
-  message = name;
-  switch (status) {
-    case 'offline':
-      message += ' is offline and has not started on today\'s message...'
-      break;
-    case 'online':
-      message += ' is online but has not started on today\'s message...'
-      break;
-    case 'writing':
-      message += ' has started on today\'s message...'
-      break;
-    case 'sent':
-      title = 'Sent';
-      message += ' has sent today\'s message...'
-      break;
-  }
-  el.parent().attr('title', message);
+  el.attr('class', 'icon-' + icon);
+  el.parent().attr('title', status);
   el.parent().tooltip('destroy');
   el.parent().tooltip({
-    title: message,
+    title: status,
     placement: 'bottom'
   });
 }
@@ -95,20 +79,6 @@ jQuery(function($) {
     scrollPreviousMessage()
   });
 
-  $('#status-jacob').popover({
-    title: 'Jacob\'s Message Status',
-    content: 'Stuff goes here...',
-    trigger: 'hover',
-    placement: 'bottom'
-  });
-
-  $('#status-kathryn').popover({
-    title: 'Kathryn\'s Message Status',
-    content: 'Stuff goes here...',
-    trigger: 'hover',
-    placement: 'bottom'
-  });
-
   window.fetchUserStatus = function() {
     $.ajax({
       url: '/users',
@@ -116,7 +86,7 @@ jQuery(function($) {
       dataType: 'json',
       success: function(data) {
         $.each(data, function(id, user) {
-          setUserStatus(user.uid, user.status);
+          setUserStatus(user.uid, user.status, user.icon);
         });
       }
     });
@@ -129,9 +99,10 @@ jQuery(function($) {
     restore    : false,              // STAY CONNECTED, EVEN WHEN BROWSER IS CLOSED
     callback   : function(message) { // RECEIVED A MESSAGE.
       message = $.parseJSON(message);
+      console.log(message);
       switch (message.action) {
         case 'status':
-          setUserStatus(message.data.uid, message.data.status);
+          setUserStatus(message.data.uid, message.data.status, message.data.icon);
           break;
         case 'message':
           bootbox.alert(message.data.message);

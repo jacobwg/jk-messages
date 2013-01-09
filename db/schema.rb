@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121126220015) do
+ActiveRecord::Schema.define(:version => 20130102202656) do
 
   create_table "messages", :force => true do |t|
     t.string   "sender"
@@ -42,6 +42,7 @@ ActiveRecord::Schema.define(:version => 20121126220015) do
     t.string   "token"
     t.date     "token_expiration"
     t.string   "status"
+    t.string   "icon"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

@@ -7,44 +7,19 @@ class User < ActiveRecord::Base
 
   # Setup accessible (or protected) attributes for your model
   attr_accessible :email, :password, :password_confirmation, :remember_me
-  # attr_accessible :title, :body
   attr_accessible :provider, :uid, :name
   attr_accessible :token, :token_expiration
+
+  attr_accessible :status, :icon
 
   after_save :broadcast_status
 
   def broadcast_status
-    Message.publish(:status, {:uid => uid, :status => status})
+    Message.publish(:status, {:uid => uid, :status => status, :icon => icon})
   end
 
-  # State information
-  include AASM
-
-  aasm :column => :status do
-    state :offline, :initial => true
-    state :online
-    state :writing
-    state :sent
-
-    event :go_online do
-      transitions :to => :online, :from => [:offline]
-    end
-
-    event :start_writing do
-      transitions :to => :writing, :from => [:offline, :online, :writing]
-    end
-
-    event :send_message do
-      transitions :to => :sent, :from => [:offline, :online, :writing, :sent]
-    end
-
-    event :refill_quota do
-      transitions :to => :offline, :from => :sent
-    end
-
-    event :go_offline do
-      transitions :to => :offline, :from => [:online]
-    end
+  def icon
+    read_attribute(:icon) || 'ok'
   end
 
   def self.reset_quotas!

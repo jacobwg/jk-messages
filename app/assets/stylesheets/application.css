@@ -8,6 +8,15 @@
  */
 
 
+.chat-status .icon-ok {
+  color: green;
+}
+
+.chat-status .icon-circle {
+  color: red;
+}
+
+
 /* Body and structure
 -------------------------------------------------- */
 
