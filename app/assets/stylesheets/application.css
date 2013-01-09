@@ -1,7 +1,7 @@
 /*
  *= require fonts
- *= require bootstrap/bootstrap
- *= require bootstrap/responsive
+ *= require bootstrap
+ *= require responsive
  *= require_self
  *= require heroku
  *= require jquery.ui.datepicker
