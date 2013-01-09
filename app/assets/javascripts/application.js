@@ -9,6 +9,7 @@
 //= require jquery.ui.datepicker
 //= require mobile
 //= require moment
+//= require turbolinks
 
 var page = 1;
 var loading = false;
@@ -35,6 +36,19 @@ var scrollPreviousMessage = function() {
   $(document).scrollTo(focus_message, {offset: -30});
 };
 
+window.fetchUserStatus = function() {
+  $.ajax({
+    url: '/users',
+    type: 'get',
+    dataType: 'json',
+    success: function(data) {
+      $.each(data, function(id, user) {
+        setUserStatus(user.uid, user.status, user.icon);
+      });
+    }
+  });
+};
+
 var setUserStatus = function(uid, status, icon) {
   var el = $('#status-' + uid);
 
@@ -47,20 +61,27 @@ var setUserStatus = function(uid, status, icon) {
   });
 }
 
+jwerty.key('j', function () {
+  scrollNextMessage()
+});
 
-jQuery(function($) {
+jwerty.key('k', function () {
+  scrollPreviousMessage()
+});
 
-  var blockedDays = $.map(window.unsentDays, function(day) {
-    return day;
-    //return moment(day);
-  });
+
+var ready = function() {
+
+  focus_message = null;
+
+  var blockedDays = window.unsentDays;
 
   var options = {
     minDate: new Date(2012, 8 - 1, 13),
     maxDate: new Date(),
     dateFormat: 'yy-mm-dd',
     onSelect: function(day) {
-      window.location = ('/' + day);
+      Turbolinks.visit('/' + day);
     },
     beforeShowDay: function(day) {
       var show = $.inArray(moment(day).format("YYYY-MM-DD"), blockedDays) == -1;
@@ -79,27 +100,11 @@ jQuery(function($) {
 
   $('.datepicker').datepicker(options);
 
-  jwerty.key('j', function () {
-    scrollNextMessage()
-  });
-
-  jwerty.key('k', function () {
-    scrollPreviousMessage()
-  });
-
-  window.fetchUserStatus = function() {
-    $.ajax({
-      url: '/users',
-      type: 'get',
-      dataType: 'json',
-      success: function(data) {
-        $.each(data, function(id, user) {
-          setUserStatus(user.uid, user.status, user.icon);
-        });
-      }
-    });
-  };
-
   window.fetchUserStatus();
 
-});
+};
+
+$(document).ready(ready);
+$(document).on('page:load', ready);
+
+

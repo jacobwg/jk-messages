@@ -78,7 +78,7 @@
             <li><a>Hello, <%= current_user.name %></a></li>
             <li><%= link_to('Logout', destroy_user_session_path, :method => :delete) %></li>
             <% else %>
-            <li><%= link_to "Sign in with Facebook", user_omniauth_authorize_path(:facebook) %></li>
+            <li><%= link_to "Sign in with Facebook", user_omniauth_authorize_path(:facebook), :'data-no-turbolink' => 'data-no-turbolink' %></li>
             <% end %>
           </ul>
         </div>
