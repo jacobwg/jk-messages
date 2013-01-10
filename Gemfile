@@ -40,6 +40,7 @@ group :development do
   gem 'whenever'
   gem 'capistrano'
   gem 'sunspot_solr'
+  gem 'bullet'
 end
 
 # Search
@@ -50,4 +51,6 @@ gem 'dalli'
 gem 'cache_digests'
 
 gem 'jquery-ui-rails'
+
+gem 'newrelic_rpm'
 
