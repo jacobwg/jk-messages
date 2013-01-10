@@ -51,11 +51,16 @@
   <div class="container">
 
     <nav class="clearfix">
+      <form class="search pull-left" action="/search" method="get">
+        <p><input type="text" class="search-query" placeholder="Search" name="q"<% if @query %>value="<%= @query %>"<% end %>></p>
+      </form>
       <p class="pull-right">
         <% if user_signed_in? %>
-        Hello, <%= current_user.name %> (<%= link_to('Logout', destroy_user_session_path, :method => :delete) %>)
+        Hey, <%= current_user.name.split(' ').first %> (<%= link_to('Logout', destroy_user_session_path, :method => :delete) %>)
         <% else %>
-        <%= link_to "Sign in with Facebook", user_omniauth_authorize_path(:facebook) %>
+        <%= link_to user_omniauth_authorize_path(:facebook) do %>
+          <%= image_tag 'fb-login.gif' %>
+        <% end %>
         <% end %>
       </p>
     </nav>
@@ -74,10 +79,6 @@
         <% end %>
         <a role="button" class="btn" id="pick-day">Pick Day</a>
       </p>
-
-      <form class="search" action="/search" method="get">
-        <input type="text" class="search-query" placeholder="Search" name="q"<% if @query %>value="<%= @query %>"<% end %>>
-      </form>
     </div>
 
     <div class="datepicker"></div>
