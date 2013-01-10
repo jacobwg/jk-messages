@@ -1,6 +1,8 @@
 class Message < ActiveRecord::Base
   attr_accessible :body, :facebook_id, :local_id, :sender, :time
 
+  paginates_per 10
+
   default_scope order('time ASC')
 
   # Search
@@ -24,6 +26,10 @@ class Message < ActiveRecord::Base
 
   def time_cst
     time.in_time_zone('America/Chicago')
+  end
+
+  def recipient
+    sender == 'Jacob Gillespie' ? 'Kathryn Elizabeth' : 'Jacob Gillespie'
   end
 
   def date_formatted

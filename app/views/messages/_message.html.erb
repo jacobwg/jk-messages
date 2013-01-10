@@ -1,18 +1,28 @@
 <%= cache message do %>
-  <div class="row message <%= message.sender %>">
-    <div class="span12">
-      <div class="media">
-        <% if message.sender == 'Jacob Gillespie' %>
-        <img src="<%= asset_path('jacob.jpg') %>" alt="Jacob Gillespie" class="media-object pull-left">
-        <% else %>
-        <img src="<%= asset_path('kathryn-v2.jpg') %>" alt="Kathryn Elizabeth" class="media-object pull-left">
-        <% end %>
-        <div class="media-body">
-          <h4 class="media-heading"><abbr class="timeago" title="<%= message.time_cst %>"><%= message.date_formatted %></abbr></h4>
-          <%= auto_link(simple_format(h(message.body)), :sanitize => false) %>
-          <%= link_to("See more from #{message.time_cst.strftime('%B %e, %Y')}", date_path([message.time_cst.year, message.time_cst.month, message.time_cst.day].join('-')), class: 'seeMore') %>
-        </div>
-      </div>
-    </div>
+
+  <div class="message <%= message.sender %>">
+
+    <% if message.sender == 'Jacob Gillespie' %>
+    <img src="<%= asset_path('jacob.jpg') %>" alt="Jacob Gillespie" class="pull-right">
+    <% else %>
+    <img src="<%= asset_path('kathryn-v2.jpg') %>" alt="Kathryn Elizabeth" class="pull-right">
+    <% end %>
+
+    <dl class="clearfix">
+      <dt>Sender</dt>
+      <dd><%= message.sender %></dd>
+      <dt>Recipient</dt>
+      <dd><%= message.recipient %></dd>
+      <dt>Date</dt>
+      <dd><%= message.time_cst.strftime('%B %e, %Y') %></dd>
+      <dt>Time</dt>
+      <dd><%= message.time_cst.strftime('%l:%M %P') %></dd>
+    </dl>
+
+
+
+    <%= auto_link(simple_format(h(message.body)), :sanitize => false) %>
+    <%= link_to("See more from #{message.time_cst.strftime('%B %e, %Y')}", date_path([message.time_cst.year, message.time_cst.month, message.time_cst.day].join('-')), class: 'seeMore') %>
   </div>
+
 <% end %>

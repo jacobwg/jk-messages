@@ -49,6 +49,11 @@ jwerty.key 'k', ->
   scrollPreviousMessage()
 
 ready = ->
+
+  $('.datepicker').hide();
+  $('#pick-day').on 'click', ->
+    $('.datepicker').toggle();
+
   focus_message = null
   blockedDays = window.unsentDays
 
@@ -70,6 +75,5 @@ ready = ->
   $('.datepicker').datepicker(options)
 
 $(document).ready(ready)
-$(document).on('page:load', ready)
 
 

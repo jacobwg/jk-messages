@@ -19,6 +19,7 @@ class MessagesController < ApplicationController
 
   def search
     if params[:q]
+      @last_day = Message.last.time_cst.to_date
       @query = params[:q]
       @messages = Message.search(params)
       respond_with @messages

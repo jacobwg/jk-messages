@@ -1,9 +1,3 @@
-<% unless @day == @last_day %>
-  <p><%= link_to 'Go to Most Recent Messages', :root, :class => 'btn' %></p>
-<% end %>
-
-<p><a href="#myModal" role="button" class="btn btn-success" data-toggle="modal">Pick Day</a></p>
-
 <ul class="pager">
   <% if @day.prev_day < @first_day %>
     <li class="previous disabled"><a>&larr; Previous Day</a></li>

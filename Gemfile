@@ -45,6 +45,9 @@ end
 # Search
 gem 'tire'
 
+# Pagination
+gem 'kaminari'
+
 # Caching
 gem 'dalli'
 gem 'cache_digests'
