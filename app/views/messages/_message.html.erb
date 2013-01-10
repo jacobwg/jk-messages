@@ -3,9 +3,9 @@
   <div class="message <%= message.sender %>">
 
     <% if message.sender == 'Jacob Gillespie' %>
-    <img src="<%= asset_path('jacob.jpg') %>" alt="Jacob Gillespie" class="pull-right">
+    <%= image_tag('jacob.jpg', :alt => 'Jacob Gillespie', :class => 'pull-right', :width => '50', :height => '50' )%>
     <% else %>
-    <img src="<%= asset_path('kathryn.jpg') %>" alt="Kathryn Elizabeth" class="pull-right">
+    <%= image_tag('kathryn.jpg', :alt => 'Kathryn Elizabeth', :class => 'pull-right', :width => '50', :height => '50' )%>
     <% end %>
 
     <dl class="clearfix">
@@ -18,8 +18,6 @@
       <dt>Time</dt>
       <dd><%= message.time_cst.strftime('%l:%M %P') %></dd>
     </dl>
-
-
 
     <%= auto_link(simple_format(h(message.body)), :sanitize => false) %>
     <%= link_to("See more from #{message.time_cst.strftime('%B %e, %Y')}", date_path([message.time_cst.year, message.time_cst.month, message.time_cst.day].join('-')), class: 'seeMore') %>
