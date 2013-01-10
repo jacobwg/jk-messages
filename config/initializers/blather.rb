@@ -1,1 +1,0 @@
-FB_API_KEY = Settings.fb_id
