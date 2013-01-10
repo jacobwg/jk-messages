@@ -1,7 +1,7 @@
 <% if @messages.size == 0 %>
   <h2>No Results Found</h2>
 <% else %>
-  <%= paginate @messages %>>
+  <%= paginate @messages %>
   <div><%= render(@messages) %></div>
   <%= paginate @messages %>
 <% end %>
