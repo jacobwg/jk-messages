@@ -1,8 +1,0 @@
-<% if @since and @messages.size > 0 %>
-  var scroll = $(document).scrollTop();
-  var firstMessage = $('.message:first');
-  var curOffset = firstMessage.offset().top - $(document).scrollTop();
-  $("#content").prepend("<%= escape_javascript(render(@messages)) %>");
-  window.since = '<%= @messages.first.time_cst.iso8601 %>';
-  $(document).scrollTop(firstMessage.offset().top - curOffset);
-<% end %>
