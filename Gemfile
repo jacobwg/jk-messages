@@ -47,6 +47,7 @@ gem 'tire'
 
 # Caching
 gem 'dalli'
+gem 'cache_digests'
 
 gem 'jquery-ui-rails'
 
