@@ -45,8 +45,6 @@ end
 # Search
 gem 'tire'
 
-gem 'aasm'
-
 # Caching
 gem 'dalli'
 
