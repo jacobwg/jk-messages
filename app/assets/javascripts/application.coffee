@@ -8,7 +8,6 @@
 #= require jquery.ui.datepicker
 #= require mobile
 #= require moment
-#= require turbolinks
 
 page = 1
 loading = false
@@ -61,7 +60,7 @@ ready = ->
     maxDate: new Date(),
     dateFormat: 'yy-mm-dd',
     onSelect: (day) ->
-      Turbolinks.visit('/' + day)
+      window.location = ('/' + day)
     beforeShowDay: (day) ->
       show = $.inArray(moment(day).format("YYYY-MM-DD"), blockedDays) == -1
       window.day = day
