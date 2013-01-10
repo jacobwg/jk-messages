@@ -1,12 +1,9 @@
 #= require jquery
 #= require jquery_ujs
 #= require bootstrap
-#= require bootbox
-#= require jquery.timeago
 #= require jwerty
 #= require jquery.scrollTo
 #= require jquery.ui.datepicker
-#= require mobile
 #= require moment
 
 page = 1
