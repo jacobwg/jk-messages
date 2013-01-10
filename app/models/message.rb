@@ -3,8 +3,6 @@ class Message < ActiveRecord::Base
 
   default_scope order('time ASC')
 
-  paginates_per 10
-
   # Search
   include Tire::Model::Search
   include Tire::Model::Callbacks

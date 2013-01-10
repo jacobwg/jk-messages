@@ -34,8 +34,6 @@ gem 'omniauth-facebook'
 
 gem 'settingslogic'
 
-gem 'kaminari'
-
 gem 'rinku', require: 'rails_rinku'
 
 group :development do
