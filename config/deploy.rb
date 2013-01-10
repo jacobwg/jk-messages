@@ -1,7 +1,7 @@
 require 'bundler/capistrano'
 
 set :application, "kathryn"
-set :repository,  "git@github.com:jacobwg/chat.git"
+set :repository,  "https://github.com/jacobwg/jk-messages.git"
 
 set :scm, :git
 set :branch, 'master'
