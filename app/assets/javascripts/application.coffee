@@ -3,7 +3,6 @@
 #= require bootstrap
 #= require bootbox
 #= require jquery.timeago
-#= require heroku
 #= require jwerty
 #= require jquery.scrollTo
 #= require jquery.ui.datepicker

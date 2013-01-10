@@ -1,6 +1,4 @@
 Chat::Application.routes.draw do
-  get "pages/about"
-  get "pages/timeline"
 
   devise_for :users, controllers: {omniauth_callbacks: 'omniauth_callbacks'}
 
