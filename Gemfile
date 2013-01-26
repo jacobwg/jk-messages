@@ -54,3 +54,5 @@ gem 'cache_digests'
 
 gem 'jquery-ui-rails'
 
+gem 'readit'
+
