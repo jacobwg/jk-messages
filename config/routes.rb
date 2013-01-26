@@ -2,11 +2,15 @@ Chat::Application.routes.draw do
 
   devise_for :users, controllers: {omniauth_callbacks: 'omniauth_callbacks'}
 
-  resources :messages, :only => :index
+  resources :messages, :only => [:index, :show]
 
   resources :users, :only => :index
 
   match 'search' => 'messages#search'
+
+  match 'feed' => 'messages#feed',
+        :as => :feed,
+        :defaults => { :format => :atom }
 
   get ':day' => 'messages#index', :as => :date
 

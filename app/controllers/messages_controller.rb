@@ -28,4 +28,15 @@ class MessagesController < ApplicationController
     end
   end
 
+  def feed
+    @title = 'J K Messages'
+    @messages = Message.limit(20)
+
+    @updated = @messages.first.time_cst unless @messages.empty?
+
+    respond_to do |format|
+      format.atom { render :layout => false }
+    end
+  end
+
 end
