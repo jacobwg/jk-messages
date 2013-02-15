@@ -19,7 +19,7 @@
       <dt>Recipient</dt>
       <dd><%= message.recipient %></dd>
       <dt>Date</dt>
-      <dd><%= message.time_cst.strftime('%B %e, %Y') %></dd>
+      <dd><%= message.time_cst.strftime('%A,<br />%B %e, %Y').html_safe %></dd>
       <dt>Time</dt>
       <dd><%= message.time_cst.strftime('%l:%M %P') %></dd>
     </dl>
