@@ -10,10 +10,19 @@
   <p>There were no messages sent on <%= @day.strftime('%A, %B %e, %Y') %></p>
 <% else %>
   <div><%= render(@messages) %></div>
-  <%= render 'pagination' %>
+  <ul class="pager">
+    <% if @day.prev_day < @first_day %>
+      <li class="previous disabled"><a>&larr; Previous</a></li>
+    <% else %>
+      <li class="previous"><%= link_to("&larr; Previous".html_safe, date_path([@day.prev_day.year, @day.prev_day.month, @day.prev_day.day].join('-'))) %></li>
+    <% end %>
+    <% if @day.next_day > @last_day %>
+      <li class="next disabled"><a>Next &rarr;</a></li>
+    <% else %>
+      <li class="next"><%= link_to("Next &rarr;".html_safe, date_path([@day.next_day.year, @day.next_day.month, @day.next_day.day].join('-'))) %></li>
+    <% end %>
+  </ul>
 <% end %>
-
-
 
 <script type="text/javascript">
   window.defaultDate = new Date(<%= @day.year %>, <%= @day.month %> - 1, <%= @day.day %>);

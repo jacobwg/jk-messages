@@ -111,8 +111,8 @@
   <footer class="footer">
     <div class="container">
       <p>Designed and built by <a href="https://jacobwg.com" target="_blank">Jacob</a>.</p>
-      <p><strong>Current message count:</strong> <%= pluralize(Message.count, 'message') %>.</p>
-      <p><strong>Current word count:</strong> <%= pluralize(Message.pluck(:body).join(' ').split.size, 'word') %>.</p>
+      <p><strong>Message count:</strong> <%= pluralize(Message.count, 'message') %>.</p>
+      <p><strong>Word count:</strong> <%= pluralize(Message.pluck(:body).join(' ').split.size, 'word') %>.</p>
     </div>
   </footer>
 
