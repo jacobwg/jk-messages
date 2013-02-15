@@ -1,12 +1,17 @@
 <%= cache message do %>
 
-  <div class="message <%= message.sender %>">
+<div class="row message <%= message.sender %>">
+  <div class="span2">
 
-    <% if message.sender == 'Jacob Gillespie' %>
-    <%= image_tag('jacob.jpg', :alt => 'Jacob Gillespie', :class => 'pull-right', :width => '50', :height => '50' )%>
-    <% else %>
-    <%= image_tag('kathryn.jpg', :alt => 'Kathryn Elizabeth', :class => 'pull-right', :width => '50', :height => '50' )%>
-    <% end %>
+    <ul class="thumbnails">
+      <li class="span2">
+        <% if message.sender == 'Jacob Gillespie' %>
+        <%= image_tag('jacob.jpg', :alt => 'Jacob Gillespie', :class => 'thumbnail' )%>
+        <% else %>
+        <%= image_tag('kathryn.jpg', :alt => 'Kathryn Elizabeth', :class => 'thumbnail' )%>
+        <% end %>
+      </li>
+    </ul>
 
     <dl class="clearfix">
       <dt>Sender</dt>
@@ -18,9 +23,14 @@
       <dt>Time</dt>
       <dd><%= message.time_cst.strftime('%l:%M %P') %></dd>
     </dl>
-
-    <%= auto_link(simple_format(h(message.body)), :sanitize => false) %>
-    <%= link_to("See more from #{message.time_cst.strftime('%B %e, %Y')}", date_path([message.time_cst.year, message.time_cst.month, message.time_cst.day].join('-')), class: 'seeMore') %>
   </div>
+
+  <div class="span10">
+    <div>
+      <%= auto_link(simple_format(h(message.body)), :sanitize => false) %>
+      <%= link_to("See more from #{message.time_cst.strftime('%B %e, %Y')}", date_path([message.time_cst.year, message.time_cst.month, message.time_cst.day].join('-')), class: 'seeMore') %>
+    </div>
+  </div>
+</div>
 
 <% end %>
