@@ -118,6 +118,7 @@
 
   <%= javascript_include_tag "application" %>
 
+  <% if Rails.env.production? %>
   <script type="text/javascript">
     var GoSquared = {};
     GoSquared.acct = "GSN-599801-R";
@@ -135,6 +136,7 @@
         w.attachEvent("onload", gs);
     })(window);
   </script>
+  <% end %>
 
 </body>
 </html>
