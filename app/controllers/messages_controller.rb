@@ -37,6 +37,7 @@ class MessagesController < ApplicationController
 
   def search
     if params[:q]
+      @hide_pagination = true
       @last_day = Message.last.time_cst.to_date
       @query = params[:q]
       @messages = Message.search(params)

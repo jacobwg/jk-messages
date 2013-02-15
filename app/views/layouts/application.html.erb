@@ -62,27 +62,28 @@
     <div class="row">
       <div class="span12">
         <section>
-          <ul class="nav nav-pills pull-left">
-            <% if @day.prev_day < @first_day %>
-              <li class="disabled"><a>&larr; Previous</a></li>
-            <% else %>
-              <li><%= link_to("&larr; Previous".html_safe, date_path([@day.prev_day.year, @day.prev_day.month, @day.prev_day.day].join('-'))) %></li>
-            <% end %>
+          <% unless @hide_pagination %>
+            <ul class="nav nav-pills pull-left">
+              <% if @day.prev_day < @first_day %>
+                <li class="disabled"><a>&larr; Previous</a></li>
+              <% else %>
+                <li><%= link_to("&larr; Previous".html_safe, date_path([@day.prev_day.year, @day.prev_day.month, @day.prev_day.day].join('-'))) %></li>
+              <% end %>
 
-            <li class="active"><a><%= @day.strftime('%A') %></a></li>
+              <li class="active"><a><%= @day.strftime('%A') %></a></li>
 
-            <% if @day.next_day > @last_day %>
-              <li class="disabled"><a>Next &rarr;</a></li>
-            <% else %>
-              <li><%= link_to("Next &rarr;".html_safe, date_path([@day.next_day.year, @day.next_day.month, @day.next_day.day].join('-'))) %></li>
-            <% end %>
+              <% if @day.next_day > @last_day %>
+                <li class="disabled"><a>Next &rarr;</a></li>
+              <% else %>
+                <li><%= link_to("Next &rarr;".html_safe, date_path([@day.next_day.year, @day.next_day.month, @day.next_day.day].join('-'))) %></li>
+              <% end %>
 
-            <li><a id="pick-day">Pick Day</a></li>
-            <% if @day != @last_day %>
-              <li><%= link_to 'Go to Today', :root %></li>
-            <% end %>
-
-          </ul>
+              <li><a id="pick-day">Pick Day</a></li>
+              <% if @day != @last_day %>
+                <li><%= link_to 'Go to Today', :root %></li>
+              <% end %>
+            </ul>
+          <% end %>
 
           <ul class="nav nav-pills pull-right">
 
