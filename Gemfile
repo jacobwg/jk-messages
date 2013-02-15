@@ -35,12 +35,14 @@ gem 'settingslogic'
 gem 'rinku', require: 'rails_rinku'
 
 group :development do
-  gem 'whenever'
   gem 'capistrano'
   gem 'sunspot_solr'
   gem 'ruby-prof'
   gem 'newrelic_rpm'
 end
+
+# Cron
+gem 'whenever'
 
 # Search
 gem 'tire'
