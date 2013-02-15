@@ -16,9 +16,15 @@
 /* Body and structure
 -------------------------------------------------- */
 
-body {
+/*body {
   position: relative;
   padding-top: 40px;
+}*/
+
+body {
+  font-family: Baskerville, "Baskerville Old Face", "Hoefler Text", Garamond, "Times New Roman", serif;
+  font-size: 1.25em;
+  line-height: 1.25em;
 }
 
 /* Code in headings */
@@ -1101,6 +1107,11 @@ form.bs-docs-example {
 .message {
   padding-top: 24px;
   padding-bottom: 24px;
+  border-top: 1px solid black;
+}
+
+.message:first-child {
+  border-top: none;
 }
 
 .message.Kathryn {
