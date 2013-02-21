@@ -1,6 +1,7 @@
 //= require bootstrap
 //= require_self
 //= require bootstrap-responsive
+//= require retriever
 //= require jquery.ui.datepicker
 
 
@@ -16,15 +17,17 @@
 /* Body and structure
 -------------------------------------------------- */
 
-/*body {
+body {
   position: relative;
   padding-top: 40px;
-}*/
+  background: #fff none;
+  z-index: 2;
+}
 
 body {
-  font-family: Baskerville, "Baskerville Old Face", 'Lora', "Hoefler Text", Garamond, "Times New Roman", serif;
-  font-size: 1.25em;
-  line-height: 1.25em;
+  //font-family: Baskerville, "Baskerville Old Face", 'Lora', "Hoefler Text", Garamond, "Times New Roman", serif;
+  //font-size: 1.25em;
+  //line-height: 1.25em;
 }
 
 /* Code in headings */
@@ -1086,9 +1089,10 @@ form.bs-docs-example {
 
 
 .jumbotron {
-  font-family: 'Tangerine', "Helvetica Neue", Helvetica, Arial, cursive;
-  color: #ffffff;
-  background: transparent url('/assets/banner.jpg') no-repeat center center scroll;
+  background: transparent url('/assets/banner3.jpg') no-repeat top right scroll;
+  background-size: cover;
+  background-repeat: no-repeat;
+
 /*  text-shadow: 0px 1px 3px #000000;
   text-align: center;
   background: transparent url('/assets/banner.jpg') no-repeat center top scroll;
@@ -1102,6 +1106,20 @@ form.bs-docs-example {
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
      -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
           box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);*/
+  min-height: 360px;
+}
+
+.jumbotron, .jumbotron h1 {
+  font-family: 'Tangerine', "Helvetica Neue", Helvetica, Arial, cursive;
+  color: #ffffff;
+}
+
+.source-image {
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
 }
 
 .message {
