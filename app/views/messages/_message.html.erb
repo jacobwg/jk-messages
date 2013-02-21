@@ -3,7 +3,7 @@
 <div class="row message <%= message.sender %>">
   <div class="span2">
 
-    <ul class="thumbnails">
+    <ul class="thumbnails hidden-phone">
       <li class="span2">
         <% if message.sender == 'Jacob Gillespie' %>
         <%= image_tag('jacob.jpg', :alt => 'Jacob Gillespie', :class => 'thumbnail' )%>
@@ -13,16 +13,18 @@
       </li>
     </ul>
 
-    <dl class="clearfix">
-      <dt>Sender</dt>
-      <dd><%= message.sender %></dd>
-      <dt>Recipient</dt>
-      <dd><%= message.recipient %></dd>
-      <dt>Date</dt>
-      <dd><%= message.time_cst.strftime('%A,<br />%B %e, %Y').html_safe %></dd>
-      <dt>Time</dt>
-      <dd><%= message.time_cst.strftime('%l:%M %P') %></dd>
-    </dl>
+    <div class="well">
+      <dl class="clearfix">
+        <dt>Sender</dt>
+        <dd><%= message.sender %></dd>
+        <dt>Recipient</dt>
+        <dd><%= message.recipient %></dd>
+        <dt>Date</dt>
+        <dd><%= message.time_cst.strftime('%A,<br />%B %e, %Y').html_safe %></dd>
+        <dt>Time</dt>
+        <dd><%= message.time_cst.strftime('%l:%M %P') %></dd>
+      </dl>
+  </div>
   </div>
 
   <div class="span10">
