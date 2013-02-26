@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+
+  <title>J&amp;K Messages</title>
+
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta http-equiv="cleartype" content="on">
+
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="J&amp;K Messages">
+
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/assets/touch/apple-touch-icon-144x144-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="/assets/touch/apple-touch-icon-114x114-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/assets/touch/apple-touch-icon-72x72-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" href="/assets/touch/apple-touch-icon-57x57-precomposed.png">
+  <link rel="shortcut icon" href="/assets/touch/apple-touch-icon.png">
+
+  <meta name="msapplication-TileImage" content="/assets/touch/apple-touch-icon-144x144-precomposed.png">
+  <meta name="msapplication-TileColor" content="#222222">
+
+  <link href='http://fonts.googleapis.com/css?family=Lora:400,700' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Tangerine' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Raleway:400' rel='stylesheet' type='text/css'>
+
+
+  <%= stylesheet_link_tag    "application" %>
+
+  <%= csrf_meta_tags %>
+
+  <!-- IE Fix for HTML5 Tags -->
+  <!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
+
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-35810340-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+</head>
+<body>
+
+  <div class="container">
+    <%= yield %>
+  </div>
+
+  <%= javascript_include_tag "application" %>
+
+  <% if Rails.env.production? %>
+  <script type="text/javascript">
+    var GoSquared = {};
+    GoSquared.acct = "GSN-599801-R";
+    (function(w){
+      function gs(){
+        w._gstc_lt = +new Date;
+        var d = document, g = d.createElement("script");
+        g.type = "text/javascript";
+        g.src = "//d1l6p2sc9645hc.cloudfront.net/tracker.js";
+        var s = d.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(g, s);
+      }
+      w.addEventListener ?
+        w.addEventListener("load", gs, false) :
+        w.attachEvent("onload", gs);
+    })(window);
+  </script>
+  <% end %>
+
+</body>
+</html>

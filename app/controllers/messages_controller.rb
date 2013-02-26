@@ -1,9 +1,10 @@
 class MessagesController < ApplicationController
 
+  before_filter :validate
+
   respond_to :html, :json
 
   def index
-    @last_day = Message.last.time_cst.to_date
     @day = !params[:day].nil? ? Date.parse(params[:day]) : @last_day
 
     @first_day = Date.parse('2012-08-13')

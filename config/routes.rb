@@ -4,7 +4,10 @@ Chat::Application.routes.draw do
 
   resources :messages, :only => [:index, :show]
 
-  resources :users, :only => :index
+  #resources :users, :only => :index
+
+  get '/login' => 'users#login', :as => :login
+  get '/unauthorized' => 'users#unauthorized', :as => :unauthorized
 
   match 'search' => 'messages#search'
 

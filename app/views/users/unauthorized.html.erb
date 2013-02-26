@@ -1,0 +1,7 @@
+<div class="form-signin">
+  <h2 class="form-signin-heading">You are not authorized</h2>
+
+  <p>This website uses Facebook to ensure that content is only shown to authorized users - you are unfortunately not on the list.</p>
+
+  <%= link_to 'Logout', destroy_user_session_path, :method => :delete, :class => 'btn btn-large btn-primary' %>
+</div>
