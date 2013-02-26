@@ -1,0 +1,6 @@
+- page_title 'Sign in'
+.form-signin
+  %h2.form-signin-heading Please sign in
+  %p This website uses Facebook to ensure that content is only shown to authorized users...
+
+  = link_to 'Sign in with Facebook', user_omniauth_authorize_path(:facebook), :class => 'btn btn-large btn-primary'
