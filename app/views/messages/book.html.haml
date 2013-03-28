@@ -1,0 +1,28 @@
+- page_title 'The Book'
+- current_date = nil
+- identify = false
+
+%h1 The Book
+
+- #sizes:  329, 299, 322, 260, 176, 171
+
+- @messages.each_with_index do |message, idx|
+
+  .message
+
+    - if current_date != message.time_cst.to_date
+      - current_date = message.time_cst.to_date
+      - identify = true
+      %h2= current_date.strftime("%B #{message.time_cst.day.ordinalize}, %Y")
+
+    - if idx == 0 || (identify) || (idx > 0 && @messages[idx - 1].sender != message.sender)
+      - identify = false
+      %h4= message.sender
+
+
+    - if message.body.match(/^<img/)
+      != message.body
+    - else
+      = auto_link(simple_format(h(message.body)), :sanitize => false)
+
+

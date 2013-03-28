@@ -1,0 +1,24 @@
+/*
+ *= require normalize
+ *= require typeplate
+ */
+
+body {
+  text-align: justify;
+  margin: 20px;
+  font-family: 'Adobe Caslon Pro';
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Myriad Pro';
+}
+
+@media print {
+  h1, h2, h3, h4, h5, h6 {
+    page-break-before: always;
+  }
+}
+
+p, div, h1, h2, h3, h4, h5, h6 {
+  //font-size: .90%;
+}

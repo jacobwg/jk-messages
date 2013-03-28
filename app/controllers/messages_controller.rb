@@ -4,6 +4,8 @@ class MessagesController < ApplicationController
 
   respond_to :html, :json
 
+  layout 'book', :only => :book
+
   def index
     @day = !params[:day].nil? ? Date.parse(params[:day]) : @last_day
 
@@ -46,6 +48,13 @@ class MessagesController < ApplicationController
     else
       redirect_to :root
     end
+  end
+
+  def book
+    @hide_pagination = true
+    @last_day = Message.last.time_cst.to_date
+    @messages = Message.where('DATE(CONVERT_TZ(time, "UTC", "America/Chicago")) >= ? AND DATE(CONVERT_TZ(time, "UTC", "America/Chicago")) <= ?', Date.parse('2013-02-21'), Date.parse('2013-03-20'))
+    respond_with @messages
   end
 
   def feed

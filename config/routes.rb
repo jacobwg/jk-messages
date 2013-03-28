@@ -15,6 +15,8 @@ Chat::Application.routes.draw do
         :as => :feed,
         :defaults => { :format => :atom }
 
+  match 'book' => 'messages#book'
+
   get ':day' => 'messages#index', :as => :date
 
   root to: 'messages#index'
