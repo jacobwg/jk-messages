@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Framework
-gem 'rails', '3.2.11'
+gem 'rails', '3.2.13'
 
 # Database
 gem 'mysql2'
