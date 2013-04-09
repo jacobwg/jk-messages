@@ -50,7 +50,7 @@ jwerty.key 'k', ->
 
 ready = ->
 
-  #$('.datepicker').hide();
+  $('.datepicker').hide();
 
   focus_message = null
   blockedDays = window.unsentDays
@@ -73,8 +73,6 @@ ready = ->
 
   $('#pick-day').on 'click', ->
     calendar.open()
-
-  #$('.datepicker').datepicker(options)
 
 $(document).ready(ready)
 
