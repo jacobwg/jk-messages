@@ -3,7 +3,7 @@
 #= require bootstrap
 #= require jwerty
 #= require jquery.scrollTo
-#= require jquery.ui.datepicker
+#= require pickadate
 #= require moment
 
 page = 1
@@ -50,29 +50,31 @@ jwerty.key 'k', ->
 
 ready = ->
 
-  $('.datepicker').hide();
-  $('#pick-day').on 'click', ->
-    $('.datepicker').toggle();
+  #$('.datepicker').hide();
 
   focus_message = null
   blockedDays = window.unsentDays
 
-  options =
-    minDate: new Date(2012, 8 - 1, 13),
-    maxDate: new Date(),
-    dateFormat: 'yy-mm-dd',
-    onSelect: (day) ->
-      window.location = ('/' + day)
-    beforeShowDay: (day) ->
-      show = $.inArray(moment(day).format("YYYY-MM-DD"), blockedDays) == -1
-      window.day = day
-      [show, '', '']
+  #options.maxDate = window.maxDate if (window.maxDate)
 
+  input = $('.datepicker').pickadate
+    format: 'yyyy-mm-dd'
+    formatSubmit: 'yyyy-mm-dd'
+    dateMin: [2012, 8, 13]
+    dateMax: true
+    datesDisabled: blockedDays
+    onSelect: () ->
+      window.location = "/#{this.getDate( 'yyyy-mm-dd' )}"
+  calendar = input.data( 'pickadate' )
 
-  options.defaultDate = window.defaultDate if (window.defaultDate)
-  options.maxDate = window.maxDate if (window.maxDate)
+  calendar.setDate( window.defaultDate.getFullYear(), window.defaultDate.getMonth(), window.defaultDate.getDay(), true ) if window.defaultDate
 
-  $('.datepicker').datepicker(options)
+  window.c = calendar
+
+  $('#pick-day').on 'click', ->
+    calendar.open()
+
+  #$('.datepicker').datepicker(options)
 
 $(document).ready(ready)
 
