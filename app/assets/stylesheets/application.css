@@ -28,6 +28,7 @@ body {
 #header, #header h1, #header a, #header a:hover {
   color: #ECF0F1;
   text-decoration: none;
+  text-shadow: 0 0 5px #000000;
 }
 
 
