@@ -60,7 +60,8 @@
 
 
   <div class="hero-unit" id="header">
-    <h1><a href="/">The J&amp;K Messages.</a></h1>
+    <h1 class="hidden-phone"><a href="/">The J&amp;K Messages.</a></h1>
+    <p class="visible-phone"><strong><a href="/">The J&amp;K Messages.</a></strong></p>
     <p>Exchanged between Jacob&nbsp;Gillespie and Kathryn&nbsp;Smith</p>
     <p>August&nbsp;13,&nbsp;2012 to <%= @last_day.strftime('%B %e, %Y').gsub(/ /, '&nbsp;').html_safe %></p>
   </div>
