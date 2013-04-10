@@ -1,9 +1,10 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
 
-  before_filter :load_users
+  before_filter :load_stuff
 
-  def load_users
+  def load_stuff
+    @sent_days = Message.all.map { |m| m.time_cst.to_date }.uniq
     @last_day = Message.last.time_cst.to_date
     @jacob = User.where(uid: Settings.jacob_id).first
     @kathryn = User.where(uid: Settings.kathryn_id).first

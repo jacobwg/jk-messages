@@ -12,8 +12,7 @@ class MessagesController < ApplicationController
     @first_day = Date.parse('2012-08-13')
 
     all_days = (@first_day..@last_day).to_a
-    sent_days = Message.all.map { |m| m.time_cst.to_date }
-    @unsent_days = all_days - sent_days
+    @unsent_days = all_days - @sent_days
     @unsent_days.map! { |d| [d.year, d.month, d.day] }
 
     @messages = Message.where(['time >= ? and time <= ?', @day.to_time.beginning_of_day, @day.to_time.end_of_day])
@@ -28,8 +27,7 @@ class MessagesController < ApplicationController
     @first_day = Date.parse('2012-08-13')
 
     all_days = (@first_day..@last_day).to_a
-    sent_days = Message.all.map { |m| m.time_cst.to_date }
-    @unsent_days = all_days - sent_days
+    @unsent_days = all_days - @sent_days
     @unsent_days.map! { |d| [d.year, d.month, d.day] }
 
     @message = Message.find(params[:id])

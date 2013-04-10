@@ -129,11 +129,24 @@
     <%= yield %>
   </div>
 
-  <footer class="footer">
+  <footer>
     <div class="container">
-      <p>Designed and built by <a href="https://jacobwg.com" target="_blank">Jacob</a>.</p>
-      <p><strong>Message count:</strong> <%= pluralize(Message.count, 'message') %>.</p>
-      <p><strong>Word count:</strong> <%= pluralize(Message.pluck(:body).join(' ').split.size, 'word') %>.</p>
+      <div class="row">
+        <div class="span7">
+          <h3 class="footer-title">About</h3>
+          <p>Designed and built by <a href="https://jacobwg.com" target="_blank">Jacob</a>.</p>
+        </div>
+        <div class="span5">
+          <div class="footer-banner">
+            <h3 class="footer-title">Statistics</h3>
+            <ul>
+              <li><strong>Days:</strong> <%= pluralize(@sent_days.size, 'day') %>.</li>
+              <li><strong>Message count:</strong> <%= pluralize(Message.count, 'message') %>.</li>
+              <li><strong>Word count:</strong> <%= pluralize(Message.pluck(:body).join(' ').split.size, 'word') %>.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   </footer>
 
