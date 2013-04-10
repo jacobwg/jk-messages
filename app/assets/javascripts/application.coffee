@@ -2,6 +2,7 @@
 #= require jquery_ujs
 #= require pickadate
 #= require moment
+#= require bootstrap
 
 
 #require bootstrap
@@ -14,6 +15,7 @@ jQuery ($) ->
   blockedDays = window.unsentDays
 
   input = $dp.pickadate
+    clear: false
     dateMin: [2012, 8, 13]
     dateMax: (window.maxDate || true)
     datesDisabled: blockedDays
