@@ -7,18 +7,10 @@
           = image_tag('jacob.jpg', :alt => 'Jacob Gillespie', :class => 'thumbnail' )
         - else
           = image_tag('kathryn.jpg', :alt => 'Kathryn Elizabeth', :class => 'thumbnail' )
-      .well
-        %dl.clearfix
-          %dt Sender
-          %dd= message.sender
-          %dt Recipient
-          %dd= message.recipient
-          %dt Date
-          %dd= message.time_cst.strftime('%A,<br />%B %e, %Y').html_safe
-          %dt Time
-          %dd= message.time_cst.strftime('%l:%M %P')
     .span10
       %div
+        %p
+          %strong #{message.sender} (#{message.time_cst.strftime('%A, %B %e, %Y, %l:%M %P').html_safe}):
         = auto_link(simple_format(h(message.body)), :sanitize => false)
         = link_to("See more from #{message.time_cst.strftime('%B %e, %Y')}", date_path([message.time_cst.year, message.time_cst.month, message.time_cst.day].join('-')), class: 'seeMore')
   :javascript
