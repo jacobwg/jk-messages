@@ -6,33 +6,17 @@
 //= require flat-ui
 //= require emojify/emojify
 
-
-/* Add additional stylesheets below
--------------------------------------------------- */
-/*
-  Bootstrap's documentation styles
-  Special styles for presenting Bootstrap's documentation and examples
-*/
-
-
-
-/* Body and structure
--------------------------------------------------- */
-
 body {
   position: relative;
   background: #fff none;
   z-index: 2;
 }
 
-
 #header, #header h1, #header a, #header a:hover {
   color: #ECF0F1;
   text-decoration: none;
   text-shadow: 0 0 5px #000000;
 }
-
-
 
 #header {
   background: transparent url('/assets/banner.jpg') no-repeat top center scroll;
