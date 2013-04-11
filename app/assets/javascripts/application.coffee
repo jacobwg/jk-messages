@@ -3,14 +3,13 @@
 #= require pickadate
 #= require moment
 #= require bootstrap
-
-
-#require bootstrap
+#= require emojify
 
 jQuery ($) ->
   $dp = $('.datepicker')
 
   $dp.hide()
+  emojify.run()
 
   blockedDays = window.unsentDays
 
