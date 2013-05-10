@@ -2,7 +2,34 @@ extends layout
 
 block content
 
-  div.container(id='main')
+  div.container(id='main', data-bind='visible: !loggedIn()')
+    div.grid
+      header.unit.two-of-three
+        h1.site-title
+          a(href='/#/') J&amp;K Messages
+        h2.site-tagline Please log in...
+      div.unit.one-of-three
+        button.btn(data-bind='click: login') Sign In with Facebook
+
+  div.container(id='main', data-bind='visible: loggedIn && authenticated() === "loading"')
+    div.grid
+      header.unit.two-of-three
+        h1.site-title
+          a(href='/#/') J&amp;K Messages
+        h2.site-tagline Checking your credentials...
+      div.unit.one-of-three
+        button.btn(data-bind='click: logout') Sign Out
+
+  div.container(id='main', data-bind='visible: loggedIn && authenticated() === false')
+    div.grid
+      header.unit.two-of-three
+        h1.site-title
+          a(href='/#/') J&amp;K Messages
+        h2.site-tagline You are not allowed to view this website.
+      div.unit.one-of-three
+        button.btn(data-bind='click: logout') Sign Out
+
+  div.container(id='main', data-bind='visible: loggedIn && authenticated')
     div.grid
       header.unit.two-of-three
         h1.site-title

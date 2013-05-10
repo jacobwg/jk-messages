@@ -12,6 +12,8 @@ var formatDuration = function(duration) {
 };
 
 var app = {
+  loggedIn: ko.observable(false),
+  authenticated: ko.observable('loading'),
   cache: store.get('messages') !== undefined,
   messages: ko.observableArray(store.get('messages')),
   data: ko.observable({currentMessage: 0}),
@@ -123,18 +125,47 @@ router.init('/');
 
 // Firebase adapter - no need to do any writing...
 var db = new Firebase('https://jacob-and-kathryn.firebaseio.com/');
+
+var usersDB = db.child('users');
 var messagesDB = db.child('messages');
 var dataDB = db.child('data');
-messagesDB.on('value', function(snap) {
-  app.messages(snap.val());
-  store.set('messages', snap.val());
-  app.loading(false);
-  if (router.getRoute()[0] === '')
-    goToLast();
+
+var authClient = new FirebaseAuthClient(db, function(error, user) {
+  if (error) {
+    console.log(error);
+  } else if (user) {
+    app.loggedIn(true);
+    usersDB.child('fb-' + user.id).once('value', function(userSnap) {
+      app.authenticated(userSnap.val());
+      if (userSnap.val() === true) {
+        messagesDB.on('value', function(snap) {
+          app.messages(snap.val());
+          store.set('messages', snap.val());
+          app.loading(false);
+          if (router.getRoute()[0] === '')
+            goToLast();
+        });
+        dataDB.on('value', function(snap) {
+          app.data(snap.val());
+        });
+      }
+    });
+  } else {
+    app.loggedIn(false);
+    app.authenticated(false);
+  }
 });
-dataDB.on('value', function(snap) {
-  app.data(snap.val());
-});
+
+app.login = function() {
+  authClient.login('facebook', {
+    rememberMe: true,
+    scope: 'email'
+  });
+};
+
+app.logout = function() {
+  authClient.logout();
+};
 
 ko.applyBindings(app);
 
