@@ -1,0 +1,47 @@
+extends layout
+
+block content
+
+  div.container(id='main')
+    div.grid
+      header.unit.two-of-three
+        h1.site-title
+          a(href='/#/') J&amp;K Messages
+        h2.site-tagline(data-bind="text: currentMoment().format('dddd, MMMM Do YYYY')")
+      div.unit.one-of-three
+        a.btn(data-bind='attr: { href: "#/" + prevDay() }') Previous Day
+        a.btn(data-bind='attr: { href: "#/" + nextDay() }') Next Day
+
+      hr.unit.span-grid
+
+      div.unit.span-grid
+        div(data-bind='visible: loading')
+          strong Checking for new messages...
+          img(src='/images/ajax-loader.gif')
+        div
+          strong(data-bind='visible: (cache || !loading()) && currentMessages().length === 0') No messages on this day...
+
+      div(data-bind='foreach: currentMessages()', ng-repeat='message in messages | moment | date:currentDay | orderBy:"created_time"')
+        div(data-bind='css: $root.getAuthorKey(author_id)')
+          div.unit.one-of-five
+            img.hide-mobile(data-bind='attr: {src: "/images/" + $root.getAuthorKey(author_id) + ".jpg"}')
+          div.unit.four-of-five
+            p
+              strong(data-bind='text: $root.messageHeader($data)')
+            div(data-bind='html: $root.simpleFormat(body)')
+
+    footer.grid
+      div.unit.one-of-five
+        h2 Stats
+      div.unit.one-of-five
+        strong Messaging
+        div(data-bind='text: durationMessages')
+      div.unit.one-of-five
+        strong Official Relationship
+        div(data-bind='text: durationRelationship')
+      div.unit.one-of-five(data-bind='visible: cache || !loading()')
+        strong Word Count
+        div(data-bind='text: wordCount')
+      div.unit.one-of-five(data-bind='visible: cache || !loading()')
+        strong Days with Messages
+        div(data-bind='text: messageDays().length')
