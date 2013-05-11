@@ -149,10 +149,13 @@ var authClient = new FirebaseAuthClient(db, function(error, user) {
           app.data(snap.val());
         });
       }
+    }, function() {
+      app.logout();
     });
   } else {
     app.loggedIn(false);
     app.authenticated(false);
+    app.loading(true);
   }
 });
 

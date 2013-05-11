@@ -36,6 +36,7 @@ block content
           a(href='/#/') J&amp;K Messages
         h2.site-tagline(data-bind="text: currentMoment().format('dddd, MMMM Do YYYY')")
       div.unit.one-of-three
+        a.btn(data-bind='click: logout') Sign Out
         a.btn(data-bind='attr: { href: "#/" + prevDay() }') Previous Day
         a.btn(data-bind='attr: { href: "#/" + nextDay() }') Next Day
 
