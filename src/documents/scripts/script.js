@@ -114,6 +114,10 @@ var goToLast = function() {
   app.currentDate(app.lastDate());
 };
 
+ko.computed(function() {
+  document.title = app.currentMoment().format('dddd, MMMM Do YYYY') + ' | The J&K Messages';
+});
+
 var routes = {
   '/:date' : goToDate,
   '/' : goToLast
