@@ -14,11 +14,12 @@ var formatDuration = function(duration) {
 var app = {
   loggedIn: ko.observable(false),
   authenticated: ko.observable('loading'),
+  auth: ko.observable({}),
   cache: store.get('messages') !== undefined,
   messages: ko.observableArray(store.get('messages')),
   data: ko.observable({currentMessage: 0}),
   firstDate: ko.observable(1344920399),
-  currentDate: ko.observable(1344920399),
+  currentDate: ko.observable(moment.unix()),
   loading: ko.observable(true),
   durationMessages: formatDuration(moment.duration(moment() - moment('2012-08-13 9:13am CST'))),
   durationRelationship: formatDuration(moment.duration(moment() - moment('2012-10-21 1pm CST')))
@@ -106,6 +107,15 @@ app.wordCount = ko.computed(function() {
   }, 0);
 });
 
+app.filteredSeenBy = function(seenBy) {
+  return _.filter(seenBy, function(item, id) { return true; });
+};
+
+app.formattedSeenBy = function(seenBy) {
+  var people = app.filteredSeenBy(seenBy);
+  return '✓ Seen by ' + _.map(people, function(person) { return person.name; }).join(', ');
+};
+
 var goToDate = function(date) {
   app.currentDate(moment(date).unix());
 };
@@ -114,8 +124,22 @@ var goToLast = function() {
   app.currentDate(app.lastDate());
 };
 
+
+// Document title updater
 ko.computed(function() {
   document.title = app.currentMoment().format('dddd, MMMM Do YYYY') + ' | The J&K Messages';
+});
+
+// Seen updater
+ko.computed(function() {
+  if (app.loggedIn() && app.authenticated()) {
+    _.each(app.currentMessages(), function(message, id) {
+      messagesDB.child(message.message_id.replace('510521608973600_', '')).child('seenBy').child('fb-' + app.auth().id).set({
+        name: app.auth().first_name,
+        time: moment().unix()
+      });
+    });
+  }
 });
 
 var routes = {
@@ -138,6 +162,7 @@ var authClient = new FirebaseAuthClient(db, function(error, user) {
   if (error) {
     console.log(error);
   } else if (user) {
+    app.auth(user);
     app.loggedIn(true);
     usersDB.child('fb-' + user.id).once('value', function(userSnap) {
       app.authenticated(userSnap.val());
@@ -157,9 +182,11 @@ var authClient = new FirebaseAuthClient(db, function(error, user) {
       app.logout();
     });
   } else {
+    app.auth({});
     app.loggedIn(false);
     app.authenticated(false);
     app.loading(true);
+    app.currentDate(moment().unix());
   }
 });
 

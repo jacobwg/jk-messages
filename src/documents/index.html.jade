@@ -58,6 +58,8 @@ div.container(id='main', data-bind='visible: loggedIn && authenticated')
           p
             strong(data-bind='text: $root.messageHeader($data)')
           div(data-bind='html: $root.simpleFormat(body)')
+          div(data-bind='visible: $root.filteredSeenBy(seenBy).length > 0')
+            small(data-bind='text: $root.formattedSeenBy(seenBy)')
 
     hr.unit.span-grid
 
