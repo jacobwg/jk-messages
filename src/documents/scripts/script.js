@@ -107,6 +107,10 @@ app.wordCount = ko.computed(function() {
   }, 0);
 });
 
+app.seen = function(data) {
+  return data.seenBy || [];
+};
+
 app.filteredSeenBy = function(seenBy) {
   return _.filter(seenBy, function(item, id) { return true; });
 };
@@ -203,7 +207,14 @@ app.logout = function() {
 
 ko.applyBindings(app);
 
+var m2DB = db.child('days');
 
+var move = function() {
+  _.each(app.messages(), function(message, id) {
+    var date = moment.unix(message.created_time).format('YYYY-MM-DD');
+    m2DB.child(date).push(message);
+  });
+};
 
 
 
