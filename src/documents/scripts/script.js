@@ -16,8 +16,7 @@ var app = {
   authenticated: ko.observable('loading'),
   auth: ko.observable({}),
   cache: store.get('messages') !== undefined,
-  //messages: ko.observableArray(store.get('messages')),
-  messages: ko.observable({}),
+  messages: ko.observableArray(store.get('messages')),
   data: ko.observable({currentMessage: 0}),
   firstDate: ko.observable(1344920399),
   currentDate: ko.observable(moment.unix()),
@@ -164,28 +163,9 @@ var messagesDB = db.child('messages');
 var dataDB = db.child('data');
 
 var listenToMessages = function() {
-  if (false)
-  messagesDB.once('value', function(snap) {
+  messagesDB.on('value', function(snap) {
     app.messages(snap.val());
     app.loading(false);
-    store.set('messages', app.messages());
-  });
-
-  messagesDB.on('child_added', function(snap) {
-    console.log(snap.name() + ' added');
-    return;
-    var messages = app.messages();
-    messages[snap.name()] = snap.val();
-    app.messages(messages);
-    store.set('messages', app.messages());
-  });
-
-  messagesDB.on('child_changed', function(snap) {
-    console.log(snap.name() + ' changed');
-    return;
-    var messages = app.messages();
-    messages[snap.name()] = snap.val();
-    app.messages(messages);
     store.set('messages', app.messages());
   });
 };
@@ -237,6 +217,14 @@ var move = function() {
     m2DB.child(date).push(message);
   });
 };
+
+
+
+
+var app = angular.module('app', []);
+
+
+
 
 
 
