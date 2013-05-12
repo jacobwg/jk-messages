@@ -16,7 +16,8 @@ var app = {
   authenticated: ko.observable('loading'),
   auth: ko.observable({}),
   cache: store.get('messages') !== undefined,
-  messages: ko.observableArray(store.get('messages')),
+  //messages: ko.observableArray(store.get('messages')),
+  messages: ko.observable({}),
   data: ko.observable({currentMessage: 0}),
   firstDate: ko.observable(1344920399),
   currentDate: ko.observable(moment.unix()),
@@ -162,6 +163,33 @@ var usersDB = db.child('users');
 var messagesDB = db.child('messages');
 var dataDB = db.child('data');
 
+var listenToMessages = function() {
+  if (false)
+  messagesDB.once('value', function(snap) {
+    app.messages(snap.val());
+    app.loading(false);
+    store.set('messages', app.messages());
+  });
+
+  messagesDB.on('child_added', function(snap) {
+    console.log(snap.name() + ' added');
+    return;
+    var messages = app.messages();
+    messages[snap.name()] = snap.val();
+    app.messages(messages);
+    store.set('messages', app.messages());
+  });
+
+  messagesDB.on('child_changed', function(snap) {
+    console.log(snap.name() + ' changed');
+    return;
+    var messages = app.messages();
+    messages[snap.name()] = snap.val();
+    app.messages(messages);
+    store.set('messages', app.messages());
+  });
+};
+
 var authClient = new FirebaseAuthClient(db, function(error, user) {
   if (error) {
     console.log(error);
@@ -171,13 +199,7 @@ var authClient = new FirebaseAuthClient(db, function(error, user) {
     usersDB.child('fb-' + user.id).once('value', function(userSnap) {
       app.authenticated(userSnap.val());
       if (userSnap.val() === true) {
-        messagesDB.on('value', function(snap) {
-          app.messages(snap.val());
-          store.set('messages', snap.val());
-          app.loading(false);
-          if (router.getRoute()[0] === '')
-            goToLast();
-        });
+        listenToMessages();
         dataDB.on('value', function(snap) {
           app.data(snap.val());
         });
