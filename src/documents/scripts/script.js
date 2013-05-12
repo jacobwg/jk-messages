@@ -217,16 +217,3 @@ var move = function() {
     m2DB.child(date).push(message);
   });
 };
-
-
-
-
-var app = angular.module('app', []);
-
-
-
-
-
-
-
-

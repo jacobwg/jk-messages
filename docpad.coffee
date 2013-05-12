@@ -49,7 +49,6 @@ docpadConfig = {
 				'/vendor/knockout-min.js'
 				'/vendor/autolink.js'
 				'/vendor/director.js'
-				'https://ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js'
 				'/scripts/script.js'
 			]
 
