@@ -12,7 +12,7 @@ div.container(id='main', data-bind='visible: !loggedIn()')
     div.unit.one-of-three
       button.btn(data-bind='click: login') Sign In with Facebook
 
-div.container(id='main', data-bind='visible: loggedIn && authenticated() === "loading"')
+div.container(id='main', data-bind='visible: loggedIn() && authenticated() === "loading"')
   div.grid
     header.unit.two-of-three
       h1.site-title
@@ -30,7 +30,7 @@ div.container(id='main', data-bind='visible: loggedIn() && authenticated() === f
     div.unit.one-of-three
       button.btn(data-bind='click: logout') Sign Out
 
-div.container(id='main', data-bind='visible: loggedIn && authenticated')
+div.container(id='main', data-bind='visible: loggedIn() && authenticated()')
   div.grid
     header.unit.two-of-three
       h1.site-title
