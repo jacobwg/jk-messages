@@ -34,7 +34,7 @@ var loadMessage = function(id) {
   queryFB(q).then(function(data) {
     var message = data.data[0];
     console.log('Fetched message ID ' + id);
-    messagesDB.child(id).set(message);
+    messagesDB.child(id).setWithPriority(message, message.created_time);
     dataDB.child('currentMessage').transaction(function(currentMessage) {
       if (currentMessage < id)
         return id;
