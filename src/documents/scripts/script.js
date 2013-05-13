@@ -16,9 +16,9 @@ var app = {
   authenticated: ko.observable('loading'),
   auth: ko.observable({}),
   cache: store.get('messages') !== undefined,
-  messages: ko.observableArray(store.get('messages')),
+  messages: ko.observableArray(store.get('messages') || []),
   data: ko.observable({currentMessage: 0}),
-  firstDate: ko.observable(1344920399),
+  firstDate: ko.observable(1344867195),
   currentDate: ko.observable(moment.unix()),
   loading: ko.observable(true),
   durationMessages: formatDuration(moment.duration(moment() - moment('2012-08-13 9:13am CST'))),
@@ -100,7 +100,7 @@ app.emptyDays = ko.computed(function() {
 
 app.wordCount = ko.computed(function() {
   var counts = _.map(app.messages(), function(message) {
-    return message.body.match(/\S+/g).length;
+    return ((message.body || ' ').match(/\S+/g) || []).length;
   });
   return _.reduce(counts, function(memo, count) {
     return memo + count;
@@ -146,29 +146,54 @@ ko.computed(function() {
   }
 });
 
+// Cache saver
+ko.computed(function () {
+  if (!app.loading())
+    store.set('messages', app.messages());
+});
+
 var routes = {
   '/:date' : goToDate,
   '/' : goToLast
 };
 
 var router = Router(routes);
-
 router.init('/');
 
-// Firebase adapter - no need to do any writing...
 var db = new Firebase('https://jacob-and-kathryn.firebaseio.com/');
 
 var usersDB = db.child('users');
 var messagesDB = db.child('messages');
 var dataDB = db.child('data');
 
+var updateMessage = function(id, message) {
+  var messages = app.messages();
+  messages[id] = message;
+  app.messages(messages);
+};
+
+var processNewMessages = function(snap) {
+  app.loading(false);
+  console.log('child_added', snap.name());
+  updateMessage(snap.name(), snap.val());
+};
+
 var listenToMessages = function() {
-  messagesDB.on('value', function(snap) {
+  if (false)
+  messagesDB.once('value', function(snap) {
     app.messages(snap.val());
     app.loading(false);
     store.set('messages', app.messages());
   });
+
+  messagesDB.startAt(app.lastDate() + 1).limit(50).on('child_added', processNewMessages);
+
+  messagesDB.on('child_changed', function(snap) {
+    console.log('child_changed', snap.name());
+    updateMessage(snap.name(), snap.val());
+  });
 };
+
 
 var authClient = new FirebaseAuthClient(db, function(error, user) {
   if (error) {
@@ -188,6 +213,7 @@ var authClient = new FirebaseAuthClient(db, function(error, user) {
       app.logout();
     });
   } else {
+    messagesDB.off();
     app.auth({});
     app.loggedIn(false);
     app.authenticated(false);
@@ -217,3 +243,16 @@ var move = function() {
     m2DB.child(date).push(message);
   });
 };
+
+var updateId = function() {
+  _.each(app.messages(), function(message, id) {
+    (function(id) {
+      setTimeout(function() {
+        console.warn(id);
+        messagesDB.child(id).update({local_id: id});
+      }, 100);
+    })(id);
+  });
+};
+
+

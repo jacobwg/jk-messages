@@ -50,7 +50,7 @@ div.container(id='main', data-bind='visible: loggedIn() && authenticated()')
       div
         strong(data-bind='visible: (cache || !loading()) && currentMessages().length === 0') No messages on this day...
 
-    div(data-bind='foreach: currentMessages()', ng-repeat='message in messages | moment | date:currentDay | orderBy:"created_time"')
+    div(data-bind='foreach: currentMessages()')
       div(data-bind='css: $root.getAuthorKey(author_id)')
         div.unit.one-of-five
           img.hide-mobile(data-bind='attr: {src: "/images/" + $root.getAuthorKey(author_id) + ".jpg"}')
