@@ -48,6 +48,7 @@ docpadConfig = {
 				'/vendor/underscore-min.js'
 				'/vendor/angular.js'
 				'/vendor/autolink.js'
+				'/vendor/date.format.js'
 				'/vendor/director.js'
 				'/scripts/script.js'
 			]

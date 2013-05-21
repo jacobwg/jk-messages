@@ -21,8 +21,12 @@ var getAuthorKey = function(author_id) {
   }
 };
 
+var formatDate = function(date) {
+  return date.format('default');
+};
+
 var messageHeader = function(message) {
-  return moment.unix(message.created_time).format("dddd, MMMM Do YYYY, h:mm:ss a") + ' - ' + getAuthorName(message.author_id) + ':';
+  return formatDate(new Date(message.created_time * 1000)) + ' - ' + getAuthorName(message.author_id) + ':';
 };
 
 var simpleFormat = function(content) {
@@ -34,6 +38,18 @@ var simpleFormat = function(content) {
 app.controller('MessagesController', ['$scope', '$timeout',
   function($scope, $timeout) {
 
+    // Safe apply
+    $scope.safeApply = function(fn) {
+      var phase = this.$root.$$phase;
+      if(phase == '$apply' || phase == '$digest') {
+        if(fn && (typeof(fn) === 'function')) {
+          fn();
+        }
+      } else {
+        this.$apply(fn);
+      }
+    };
+
     // Authentication
     $scope.loggedIn = false;
     $scope.authenticated = 'loading';
@@ -41,7 +57,7 @@ app.controller('MessagesController', ['$scope', '$timeout',
 
     // Messages
     $scope.hasMessagesCache = store.get('messages') !== undefined;
-    $scope.messages = store.get('messages') || [];
+    $scope.messages = store.get('messages') || {};
 
     // Data
     $scope.data = {currentMessage: 0};
@@ -62,6 +78,10 @@ app.controller('MessagesController', ['$scope', '$timeout',
 
     $scope.lastDate = function() {
       return _.max($scope.messages, function(message) { return message.created_time; }).created_time || $scope.firstDate;
+    };
+
+    $scope.lastId = function() {
+      return _.max($scope.messages, function(message) { return message.local_id; }).local_id || 0;
     };
 
     $scope.lastMoment = function() {
@@ -120,7 +140,7 @@ app.controller('MessagesController', ['$scope', '$timeout',
 
     var updateMessage = function(snap) {
       $timeout(function() {
-        $scope.$apply(function() {
+        $scope.safeApply(function() {
           $scope.loading = false;
           var message = snap.val();
           message.body = simpleFormat(message.body);
@@ -136,7 +156,9 @@ app.controller('MessagesController', ['$scope', '$timeout',
     };
 
     var watchMessages = function() {
-      messagesDB.startAt($scope.lastDate() + 1).limit(50).on('child_added', function(snap) {
+      console.log('limit', $scope.data.currentMessage - $scope.lastId());
+      messagesDB.startAt($scope.lastDate() + 1).limit($scope.data.currentMessage - $scope.lastId()).on('child_added', function(snap) {
+        console.log('snap', snap.name());
         updateMessage(snap);
       });
       messagesDB.on('child_changed', function(snap) {
@@ -149,21 +171,21 @@ app.controller('MessagesController', ['$scope', '$timeout',
       if (error) {
         console.log(error);
       } else if (user) {
-        $scope.$apply(function() {
+        $scope.safeApply(function() {
           $scope.auth = user;
           $scope.loggedIn = true;
         });
 
         usersDB.child('fb-' + user.id).once('value', function(snap) {
-          $scope.$apply(function() {
+          $scope.safeApply(function() {
             $scope.authenticated = snap.val();
           });
           if (snap.val() === true) {
-            watchMessages();
             dataDB.on('value', function(snap) {
-              $scope.$apply(function() {
+              $scope.safeApply(function() {
                 $scope.data = snap.val();
               });
+              watchMessages();
             });
           }
         });
@@ -188,7 +210,8 @@ app.controller('MessagesController', ['$scope', '$timeout',
       document.title = $scope.currentMoment().format('dddd, MMMM Do YYYY') + ' | The J&K Messages';
     });
 
-    $scope.$watch('loading + authenticated + loggedIn + currentMessages()', function() {
+    $scope.$watch('authenticated + loggedIn + currentDate', function() {
+      return;
       if ($scope.loggedIn && $scope.authenticated) {
         _.each($scope.currentMessages(), function(message, id) {
           messagesDB.child(message.message_id.replace('510521608973600_', '')).child('seen_by').child('fb-' + $scope.auth.id).set({
@@ -200,21 +223,23 @@ app.controller('MessagesController', ['$scope', '$timeout',
     });
 
     $scope.$watch('messages + loading', function() {
-      if (!$scope.loading)
-        store.set('messages', $scope.messages);
+      $timeout(function() {
+        if (!$scope.loading)
+          store.set('messages', $scope.messages);
+      });
     });
 
     // Routing
     var goToDate = function(date) {
       $timeout(function() {
-        $scope.$apply(function() {
+        $scope.safeApply(function() {
           $scope.currentDate = moment(date).unix();
         });
       });
     };
 
     var goToLast = function() {
-      $scope.$apply(function() {
+      $scope.safeApply(function() {
         $scope.currentDate = $scope.lastDate();
       });
     };
