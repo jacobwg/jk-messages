@@ -57,7 +57,7 @@ app.controller('MessagesController', ['$scope', '$timeout',
 
     // Messages
     $scope.hasMessagesCache = store.get('messages') !== undefined;
-    $scope.messages = store.get('messages') || {};
+    $scope.messages = store.get('messages') || [];
 
     // Data
     $scope.data = {currentMessage: 0};
@@ -81,7 +81,7 @@ app.controller('MessagesController', ['$scope', '$timeout',
     };
 
     $scope.lastId = function() {
-      return _.max($scope.messages, function(message) { return message.local_id; }).local_id || 0;
+      return $scope.messages.length - 1;
     };
 
     $scope.lastMoment = function() {
@@ -138,33 +138,50 @@ app.controller('MessagesController', ['$scope', '$timeout',
     var messagesDB = db.child('messages');
     var dataDB = db.child('data');
 
+    var buildMessage = function(message) {
+      message.body = simpleFormat(message.body);
+      message.header = messageHeader(message);
+      message.author_key = getAuthorKey(message.author_id);
+      message.seen_by = message.seen_by || [];
+      message.filtered_seen_by = _.filter(message.seen_by, function(item, id) { return true; });
+      message.has_seen_by = message.filtered_seen_by.length > 0 && false;
+      message.formatted_seen_by = '✓ Seen by ' + _.map(message.filtered_seen_by, function(person) { return '<span title="' + moment.unix(person.time).format("dddd, MMMM Do YYYY, h:mm:ss a") + '">' + person.name + '</span>'; }).join(', ');
+      return message;
+    };
+
     var updateMessage = function(snap) {
-      $timeout(function() {
-        $scope.safeApply(function() {
-          $scope.loading = false;
-          var message = snap.val();
-          message.body = simpleFormat(message.body);
-          message.header = messageHeader(message);
-          message.author_key = getAuthorKey(message.author_id);
-          message.seen_by = message.seen_by || [];
-          message.filtered_seen_by = _.filter(message.seen_by, function(item, id) { return true; });
-          message.has_seen_by = message.filtered_seen_by.length > 0;
-          message.formatted_seen_by = '✓ Seen by ' + _.map(message.filtered_seen_by, function(person) { return '<span title="' + moment.unix(person.time).format("dddd, MMMM Do YYYY, h:mm:ss a") + '">' + person.name + '</span>'; }).join(', ');
-          $scope.messages[snap.name()] = message;
-        });
+      $scope.safeApply(function() {
+        $scope.loading = false;
+        var message = buildMessage(snap);
+        $scope.messages[message.local_id] = message;
+        store.set('messages', $scope.messages);
       });
     };
 
     var watchMessages = function() {
-      console.log('limit', $scope.data.currentMessage - $scope.lastId());
-      messagesDB.startAt($scope.lastDate() + 1).limit($scope.data.currentMessage - $scope.lastId()).on('child_added', function(snap) {
-        console.log('snap', snap.name());
-        updateMessage(snap);
-      });
-      messagesDB.on('child_changed', function(snap) {
-        console.log('child_changed', snap.name());
-        updateMessage(snap);
-      });
+      var limit = $scope.data.currentMessage - $scope.lastId();
+      if (limit > 100) {
+        messagesDB.once('value', function(snap) {
+          console.log(snap.val());
+          $scope.$apply(function() {
+            $scope.messages = _.map(snap.val(), buildMessage);
+            $scope.loading = false;
+          });
+          store.set('messages', $scope.messages);
+          watchMessages();
+        });
+      } else {
+        if (limit === 0)
+          $scope.$apply(function() {
+            $scope.loading = false;
+          });
+        messagesDB.startAt($scope.lastDate() + 1).limit($scope.data.currentMessage - $scope.lastId() + 20).on('child_added', function(snap) {
+          updateMessage(snap.val());
+        });
+        messagesDB.on('child_changed', function(snap) {
+          updateMessage(snap.val());
+        });
+      }
     };
 
     var authClient = new FirebaseAuthClient(db, function(error, user) {
@@ -210,8 +227,7 @@ app.controller('MessagesController', ['$scope', '$timeout',
       document.title = $scope.currentMoment().format('dddd, MMMM Do YYYY') + ' | The J&K Messages';
     });
 
-    $scope.$watch('authenticated + loggedIn + currentDate', function() {
-      return;
+    $scope.$watch('authenticated + loggedIn + currentMessages()', function() {
       if ($scope.loggedIn && $scope.authenticated) {
         _.each($scope.currentMessages(), function(message, id) {
           messagesDB.child(message.message_id.replace('510521608973600_', '')).child('seen_by').child('fb-' + $scope.auth.id).set({
@@ -220,13 +236,6 @@ app.controller('MessagesController', ['$scope', '$timeout',
           });
         });
       }
-    });
-
-    $scope.$watch('messages + loading', function() {
-      $timeout(function() {
-        if (!$scope.loading)
-          store.set('messages', $scope.messages);
-      });
     });
 
     // Routing
