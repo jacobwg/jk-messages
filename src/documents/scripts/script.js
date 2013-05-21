@@ -1,5 +1,10 @@
 var app = angular.module('app', []);
 
+if (store.get('version') !== 2) {
+  store.remove('messages');
+  store.set('version', 2);
+}
+
 var formatDuration = function(duration) {
   var days = parseInt(duration.asDays());
   return days === 1 ? '1 day' : days + ' days';
