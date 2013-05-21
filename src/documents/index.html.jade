@@ -59,13 +59,13 @@ div.container(id='main', ng-show="loggedIn && authenticated")
       h2 Stats
     div.unit.one-of-five
       strong Messaging
-      div(data-bind='text: durationMessages') {{ durationMessages }}
+      div {{ durationMessages }}
     div.unit.one-of-five
       strong Official Relationship
-      div(data-bind='text: durationRelationship') {{ durationRelationship }}
-    div.unit.one-of-five(data-bind='visible: cache || !loading()')
+      div {{ durationRelationship }}
+    div.unit.one-of-five(ng-show="hasCache || !loading")
       strong Word Count
-      div(data-bind='text: wordCount') {{ wordCount() }}
-    div.unit.one-of-five(data-bind='visible: cache || !loading()')
+      div {{ wordCount() }}
+    div.unit.one-of-five(ng-show='hasCache || !loading')
       strong Days with Messages
-      div(data-bind='text: messageDays().length') {{ messagesDays().length }}
+      div {{ messageDays().length }}

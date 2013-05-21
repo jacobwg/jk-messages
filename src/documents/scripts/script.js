@@ -190,7 +190,6 @@ app.controller('MessagesController', ['$scope', '$timeout',
 
     $scope.$watch('loading + authenticated + loggedIn + currentMessages()', function() {
       if ($scope.loggedIn && $scope.authenticated) {
-        console.log('updated');
         _.each($scope.currentMessages(), function(message, id) {
           messagesDB.child(message.message_id.replace('510521608973600_', '')).child('seen_by').child('fb-' + $scope.auth.id).set({
             name: $scope.auth.first_name,
@@ -198,6 +197,11 @@ app.controller('MessagesController', ['$scope', '$timeout',
           });
         });
       }
+    });
+
+    $scope.$watch('messages + loading', function() {
+      if (!$scope.loading)
+        store.set('messages', $scope.messages);
     });
 
     // Routing
@@ -227,15 +231,3 @@ app.controller('MessagesController', ['$scope', '$timeout',
 
   }
 ]);
-
-
-
-/*
-
-// Cache saver
-(function () {
-  if (!app.loading())
-    store.set('messages', app.messages);
-});
-
-*/
