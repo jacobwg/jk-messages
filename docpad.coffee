@@ -46,7 +46,7 @@ docpadConfig = {
 				'/vendor/moment.min.js'
 				'/vendor/store.min.js'
 				'/vendor/underscore-min.js'
-				'/vendor/knockout-min.js'
+				'/vendor/angular.js'
 				'/vendor/autolink.js'
 				'/vendor/director.js'
 				'/scripts/script.js'

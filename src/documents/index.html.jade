@@ -3,63 +3,54 @@ layout: 'default'
 title: 'Messages'
 ---
 
-div.container(id='main', data-bind='visible: !loggedIn()')
+div.container(id='main', ng-show="!loggedIn")
   div.grid
     header.unit.two-of-three
       h1.site-title
         a(href='/#/') J&amp;K Messages
       h2.site-tagline Please log in...
     div.unit.one-of-three
-      button.btn(data-bind='click: login') Sign In with Facebook
+      button.btn(ng-click="login()") Sign In with Facebook
 
-div.container(id='main', data-bind='visible: loggedIn() && authenticated() === "loading"')
+div.container(id='main', ng-show="loggedIn && !authenticated")
   div.grid
     header.unit.two-of-three
       h1.site-title
         a(href='/#/') J&amp;K Messages
       h2.site-tagline Checking your credentials...
     div.unit.one-of-three
-      button.btn(data-bind='click: logout') Sign Out
+      button.btn(ng-click="logout()") Sign Out
 
-div.container(id='main', data-bind='visible: loggedIn() && authenticated() === false')
+div.container(id='main', ng-show="loggedIn && authenticated")
   div.grid
     header.unit.two-of-three
       h1.site-title
         a(href='/#/') J&amp;K Messages
-      h2.site-tagline You are not allowed to view this website.
+      h2.site-tagline(data-bind="text: currentMoment().format('dddd, MMMM Do YYYY')") {{ currentMoment().format('dddd, MMMM Do YYYY') }}
     div.unit.one-of-three
-      button.btn(data-bind='click: logout') Sign Out
-
-div.container(id='main', data-bind='visible: loggedIn() && authenticated()')
-  div.grid
-    header.unit.two-of-three
-      h1.site-title
-        a(href='/#/') J&amp;K Messages
-      h2.site-tagline(data-bind="text: currentMoment().format('dddd, MMMM Do YYYY')")
-    div.unit.one-of-three
-      a.btn(data-bind='click: logout') Sign Out
-      a.btn(data-bind='attr: { href: "#/" + prevDay() }') Previous Day
-      a.btn(data-bind='attr: { href: "#/" + nextDay() }') Next Day
+      a.btn(ng-click="logout()") Sign Out
+      a.btn(ng-href="/#/{{prevDay()}}") Previous Day
+      a.btn(ng-href="/#/{{nextDay()}}") Next Day
 
     hr.unit.span-grid
 
     div.unit.span-grid
-      div(data-bind='visible: loading')
+      div(ng-show="loading")
         strong Checking for new messages...
         img(src='/images/ajax-loader.gif')
       div
-        strong(data-bind='visible: (cache || !loading()) && currentMessages().length === 0') No messages on this day...
+        strong(data-bind='visible: (cache || !loading()) && currentMessages().length === 0', ng-show="!hasMessagesToday()") No messages on this day...
 
-    div(data-bind='foreach: currentMessages()')
-      div(data-bind='css: $root.getAuthorKey(author_id)')
+    div(ng-repeat="message in currentMessages()")
+      div(ng-class="message.author_key")
         div.unit.one-of-five
-          img.hide-mobile(data-bind='attr: {src: "/images/" + $root.getAuthorKey(author_id) + ".jpg"}')
+          img.hide-mobile(ng-src="/images/{{message.author_key}}.jpg")
         div.unit.four-of-five
           p
-            strong(data-bind='text: $root.messageHeader($data)')
-          div(data-bind='html: $root.simpleFormat(body)')
-          div(data-bind='visible: $root.filteredSeenBy($root.seen($data)).length > 0')
-            small(data-bind='text: $root.formattedSeenBy($root.seen($data))')
+            strong {{ message.header }}
+          div(ng-bind-html-unsafe="message.body")
+          div(ng-show="message.has_seen_by")
+            small(ng-bind-html-unsafe="message.formatted_seen_by")
 
     hr.unit.span-grid
 
@@ -68,13 +59,13 @@ div.container(id='main', data-bind='visible: loggedIn() && authenticated()')
       h2 Stats
     div.unit.one-of-five
       strong Messaging
-      div(data-bind='text: durationMessages')
+      div(data-bind='text: durationMessages') {{ durationMessages }}
     div.unit.one-of-five
       strong Official Relationship
-      div(data-bind='text: durationRelationship')
+      div(data-bind='text: durationRelationship') {{ durationRelationship }}
     div.unit.one-of-five(data-bind='visible: cache || !loading()')
       strong Word Count
-      div(data-bind='text: wordCount')
+      div(data-bind='text: wordCount') {{ wordCount() }}
     div.unit.one-of-five(data-bind='visible: cache || !loading()')
       strong Days with Messages
-      div(data-bind='text: messageDays().length')
+      div(data-bind='text: messageDays().length') {{ messagesDays().length }}

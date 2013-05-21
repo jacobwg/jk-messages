@@ -1,62 +1,11 @@
+var app = angular.module('app', []);
 
 var formatDuration = function(duration) {
-  var out = [];
-  if (duration.years() > 0)
-    out.push((duration.years() === 1 ? '1 year' : duration.years() + ' years'));
-  if (duration.months() > 0)
-    out.push((duration.months() === 1 ? '1 month' : duration.months() + ' months'));
-  if (duration.days() > 0)
-    out.push((duration.days() === 1 ? '1 day' : duration.days() + ' days'));
-
-  return out.join(', ');
+  var days = parseInt(duration.asDays());
+  return days === 1 ? '1 day' : days + ' days';
 };
 
-var app = {
-  loggedIn: ko.observable(false),
-  authenticated: ko.observable('loading'),
-  auth: ko.observable({}),
-  cache: store.get('messages') !== undefined,
-  messages: ko.observableArray(store.get('messages') || []),
-  data: ko.observable({currentMessage: 0}),
-  firstDate: ko.observable(1344867195),
-  currentDate: ko.observable(moment.unix()),
-  loading: ko.observable(true),
-  durationMessages: formatDuration(moment.duration(moment() - moment('2012-08-13 9:13am CST'))),
-  durationRelationship: formatDuration(moment.duration(moment() - moment('2012-10-21 1pm CST')))
-};
-
-app.firstMoment = ko.computed(function() {
-  return moment.unix(app.firstDate());
-});
-
-app.currentMoment = ko.computed(function() {
-  return moment.unix(app.currentDate());
-});
-
-app.lastDate = ko.computed(function() {
-  return _.max(app.messages(), function(message) { return message.created_time; }).created_time || app.firstDate();
-});
-
-app.lastMoment = ko.computed(function() {
-  return moment.unix(app.lastDate());
-});
-
-app.nextDay = ko.computed(function() {
-  return moment(app.currentMoment()).add('days', 1).format('YYYY-MM-DD');
-});
-
-app.prevDay = ko.computed(function() {
-  return moment(app.currentMoment()).subtract('days', 1).format('YYYY-MM-DD');
-});
-
-app.currentMessages = ko.computed(function() {
-  return _.filter(app.messages(), function(message) {
-    var m = moment.unix(message.created_time);
-    return (app.currentMoment().year() === m.year() && app.currentMoment().month() === m.month() && app.currentMoment().date() === m.date());
-  });
-});
-
-app.getAuthorName = function(author_id) {
+var getAuthorName = function(author_id) {
   if (author_id === 100003843585453) {
     return 'Kathryn Elizabeth';
   } else {
@@ -64,7 +13,7 @@ app.getAuthorName = function(author_id) {
   }
 };
 
-app.getAuthorKey = function(author_id) {
+var getAuthorKey = function(author_id) {
   if (author_id === 100003843585453) {
     return 'kathryn';
   } else {
@@ -72,187 +21,221 @@ app.getAuthorKey = function(author_id) {
   }
 };
 
-app.messageHeader = function(message) {
-  return moment.unix(message.created_time).format("dddd, MMMM Do YYYY, h:mm:ss a") + ' - ' + app.getAuthorName(message.author_id) + ':';
+var messageHeader = function(message) {
+  return moment.unix(message.created_time).format("dddd, MMMM Do YYYY, h:mm:ss a") + ' - ' + getAuthorName(message.author_id) + ':';
 };
 
-app.simpleFormat = function(content) {
+var simpleFormat = function(content) {
   content = content.replace(/\n{2,}/g, '</p><p>').replace(/\n/g, '<br/>');
   content = '<p>' + content + '</p>';
   return content.autoLink();
 };
 
-app.dateRange = ko.computed(function() {
-  var dates = [];
-  for(var i = moment(app.firstMoment()); i.isBefore(app.lastMoment()); i.add('days', 1)) {
-    dates.push(i.format('YYYY-MM-DD'));
-  }
-  return dates;
-});
+app.controller('MessagesController', ['$scope', '$timeout',
+  function($scope, $timeout) {
 
-app.messageDays = ko.computed(function() {
-  return _.uniq(_.map(app.messages(), function(message) { return moment.unix(message.created_time).format('YYYY-MM-DD'); }));
-});
+    // Authentication
+    $scope.loggedIn = false;
+    $scope.authenticated = 'loading';
+    $scope.auth = {};
 
-app.emptyDays = ko.computed(function() {
-  return _.difference(app.dateRange(), app.messageDays());
-});
+    // Messages
+    $scope.hasMessagesCache = store.get('messages') !== undefined;
+    $scope.messages = store.get('messages') || [];
 
-app.wordCount = ko.computed(function() {
-  var counts = _.map(app.messages(), function(message) {
-    return ((message.body || ' ').match(/\S+/g) || []).length;
-  });
-  return _.reduce(counts, function(memo, count) {
-    return memo + count;
-  }, 0);
-});
-
-app.seen = function(data) {
-  return data.seenBy || [];
-};
-
-app.filteredSeenBy = function(seenBy) {
-  return _.filter(seenBy, function(item, id) { return true; });
-};
-
-app.formattedSeenBy = function(seenBy) {
-  var people = app.filteredSeenBy(seenBy);
-  return '✓ Seen by ' + _.map(people, function(person) { return person.name; }).join(', ');
-};
-
-var goToDate = function(date) {
-  app.currentDate(moment(date).unix());
-};
-
-var goToLast = function() {
-  app.currentDate(app.lastDate());
-};
+    // Data
+    $scope.data = {currentMessage: 0};
+    $scope.firstDate = 1344867195;
+    $scope.currentDate = 1344867195; //moment().unix();
+    $scope.loading = true;
+    $scope.durationMessages = formatDuration(moment.duration(moment() - moment('2012-08-13 9:13am CST')));
+    $scope.durationRelationship = formatDuration(moment.duration(moment() - moment('2012-10-21 1pm CST')));
 
 
-// Document title updater
-ko.computed(function() {
-  document.title = app.currentMoment().format('dddd, MMMM Do YYYY') + ' | The J&K Messages';
-});
+    $scope.firstMoment = function() {
+      return moment.unix($scope.firstDate);
+    };
 
-// Seen updater
-ko.computed(function() {
-  if (app.loggedIn() && app.authenticated()) {
-    _.each(app.currentMessages(), function(message, id) {
-      messagesDB.child(message.message_id.replace('510521608973600_', '')).child('seenBy').child('fb-' + app.auth().id).set({
-        name: app.auth().first_name,
-        time: moment().unix()
+    $scope.currentMoment = function() {
+      return moment.unix($scope.currentDate);
+    };
+
+    $scope.lastDate = function() {
+      return _.max($scope.messages, function(message) { return message.created_time; }).created_time || $scope.firstDate;
+    };
+
+    $scope.lastMoment = function() {
+      return moment.unix($scope.lastDate());
+    };
+
+    $scope.nextDay = function() {
+      return moment($scope.currentMoment()).add('days', 1).format('YYYY-MM-DD');
+    };
+
+    $scope.prevDay = function() {
+      return moment($scope.currentMoment()).subtract('days', 1).format('YYYY-MM-DD');
+    };
+
+    $scope.currentMessages = function() {
+      return _.filter($scope.messages, function(message) {
+        var m = moment.unix(message.created_time);
+        return ($scope.currentMoment().year() === m.year() && $scope.currentMoment().month() === m.month() && $scope.currentMoment().date() === m.date());
       });
+    };
+
+    $scope.dateRange = function() {
+      var dates = [];
+      for(var i = moment($scope.firstMoment()); i.isBefore($scope.lastMoment()); i.add('days', 1)) {
+        dates.push(i.format('YYYY-MM-DD'));
+      }
+      return dates;
+    };
+
+    $scope.messageDays = function() {
+      return _.uniq(_.map($scope.messages, function(message) { return moment.unix(message.created_time).format('YYYY-MM-DD'); }));
+    };
+
+    $scope.emptyDays = function() {
+      return _.difference($scope.dateRange(), $scope.messageDays());
+    };
+
+    $scope.wordCount = function() {
+      var counts = _.map($scope.messages, function(message) {
+        return ((message.body || ' ').match(/\S+/g) || []).length;
+      });
+      return _.reduce(counts, function(memo, count) {
+        return memo + count;
+      }, 0);
+    };
+
+    $scope.hasMessagesToday = function() {
+      return $scope.currentMessages().length !== 0 || $scope.loading;
+    };
+
+    var db = new Firebase('https://jacob-and-kathryn.firebaseio.com/');
+
+    var usersDB = db.child('users');
+    var messagesDB = db.child('messages');
+    var dataDB = db.child('data');
+
+    var updateMessage = function(snap) {
+      $timeout(function() {
+        $scope.$apply(function() {
+          $scope.loading = false;
+          var message = snap.val();
+          message.body = simpleFormat(message.body);
+          message.header = messageHeader(message);
+          message.author_key = getAuthorKey(message.author_id);
+          message.seen_by = message.seen_by || [];
+          message.filtered_seen_by = _.filter(message.seen_by, function(item, id) { return true; });
+          message.has_seen_by = message.filtered_seen_by.length > 0;
+          message.formatted_seen_by = '✓ Seen by ' + _.map(message.filtered_seen_by, function(person) { return '<span title="' + moment.unix(person.time).format("dddd, MMMM Do YYYY, h:mm:ss a") + '">' + person.name + '</span>'; }).join(', ');
+          $scope.messages[snap.name()] = message;
+        });
+      });
+    };
+
+    var watchMessages = function() {
+      messagesDB.startAt($scope.lastDate() + 1).limit(50).on('child_added', function(snap) {
+        updateMessage(snap);
+      });
+      messagesDB.on('child_changed', function(snap) {
+        console.log('child_changed', snap.name());
+        updateMessage(snap);
+      });
+    };
+
+    var authClient = new FirebaseAuthClient(db, function(error, user) {
+      if (error) {
+        console.log(error);
+      } else if (user) {
+        $scope.$apply(function() {
+          $scope.auth = user;
+          $scope.loggedIn = true;
+        });
+
+        usersDB.child('fb-' + user.id).once('value', function(snap) {
+          $scope.$apply(function() {
+            $scope.authenticated = snap.val();
+          });
+          if (snap.val() === true) {
+            watchMessages();
+            dataDB.on('value', function(snap) {
+              $scope.$apply(function() {
+                $scope.data = snap.val();
+              });
+            });
+          }
+        });
+      } else {
+      }
     });
-  }
-});
 
-// Cache saver
-ko.computed(function () {
-  if (!app.loading())
-    store.set('messages', app.messages());
-});
+    $scope.login = function() {
+      authClient.login('facebook', {
+        rememberMe: true,
+        scope: 'email'
+      });
+    };
 
-var routes = {
-  '/:date' : goToDate,
-  '/' : goToLast
-};
+    $scope.logout = function() {
+      authClient.logout();
+      window.location.reload();
+    };
 
-var router = Router(routes);
-router.init('/');
+    // Watchers
+    $scope.$watch('currentDate', function() {
+      document.title = $scope.currentMoment().format('dddd, MMMM Do YYYY') + ' | The J&K Messages';
+    });
 
-var db = new Firebase('https://jacob-and-kathryn.firebaseio.com/');
-
-var usersDB = db.child('users');
-var messagesDB = db.child('messages');
-var dataDB = db.child('data');
-
-var updateMessage = function(id, message) {
-  var messages = app.messages();
-  messages[id] = message;
-  app.messages(messages);
-};
-
-var processNewMessages = function(snap) {
-  app.loading(false);
-  console.log('child_added', snap.name());
-  updateMessage(snap.name(), snap.val());
-};
-
-var listenToMessages = function() {
-  if (false)
-  messagesDB.once('value', function(snap) {
-    app.messages(snap.val());
-    app.loading(false);
-    store.set('messages', app.messages());
-  });
-
-  messagesDB.startAt(app.lastDate() + 1).limit(50).on('child_added', processNewMessages);
-
-  messagesDB.on('child_changed', function(snap) {
-    console.log('child_changed', snap.name());
-    updateMessage(snap.name(), snap.val());
-  });
-};
-
-
-var authClient = new FirebaseAuthClient(db, function(error, user) {
-  if (error) {
-    console.log(error);
-  } else if (user) {
-    app.auth(user);
-    app.loggedIn(true);
-    usersDB.child('fb-' + user.id).once('value', function(userSnap) {
-      app.authenticated(userSnap.val());
-      if (userSnap.val() === true) {
-        listenToMessages();
-        dataDB.on('value', function(snap) {
-          app.data(snap.val());
+    $scope.$watch('loading + authenticated + loggedIn + currentMessages()', function() {
+      if ($scope.loggedIn && $scope.authenticated) {
+        console.log('updated');
+        _.each($scope.currentMessages(), function(message, id) {
+          messagesDB.child(message.message_id.replace('510521608973600_', '')).child('seen_by').child('fb-' + $scope.auth.id).set({
+            name: $scope.auth.first_name,
+            time: moment().unix()
+          });
         });
       }
-    }, function() {
-      app.logout();
     });
-  } else {
-    messagesDB.off();
-    app.auth({});
-    app.loggedIn(false);
-    app.authenticated(false);
-    app.loading(true);
-    app.currentDate(moment().unix());
+
+    // Routing
+    var goToDate = function(date) {
+      $timeout(function() {
+        $scope.$apply(function() {
+          $scope.currentDate = moment(date).unix();
+        });
+      });
+    };
+
+    var goToLast = function() {
+      $scope.$apply(function() {
+        $scope.currentDate = $scope.lastDate();
+      });
+    };
+
+    var routes = {
+      '/:date' : goToDate,
+      '/' : goToLast
+    };
+
+    var router = Router(routes);
+    router.init('/');
+
+    window.s = $scope;
+
   }
+]);
+
+
+
+/*
+
+// Cache saver
+(function () {
+  if (!app.loading())
+    store.set('messages', app.messages);
 });
 
-app.login = function() {
-  authClient.login('facebook', {
-    rememberMe: true,
-    scope: 'email'
-  });
-};
-
-app.logout = function() {
-  authClient.logout();
-};
-
-ko.applyBindings(app);
-
-var m2DB = db.child('days');
-
-var move = function() {
-  _.each(app.messages(), function(message, id) {
-    var date = moment.unix(message.created_time).format('YYYY-MM-DD');
-    m2DB.child(date).push(message);
-  });
-};
-
-var updateId = function() {
-  _.each(app.messages(), function(message, id) {
-    (function(id) {
-      setTimeout(function() {
-        console.warn(id);
-        messagesDB.child(id).update({local_id: id});
-      }, 100);
-    })(id);
-  });
-};
-
-
+*/
