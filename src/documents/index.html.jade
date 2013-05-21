@@ -49,8 +49,8 @@ div.container(id='main', ng-show="loggedIn && authenticated")
           p
             strong {{ message.header }}
           div(ng-bind-html-unsafe="message.body")
-          div(ng-show="message.has_seen_by")
-            small(ng-bind-html-unsafe="message.formatted_seen_by")
+          div(ng-show="showSeen(message.local_id)")
+            small(ng-bind-html-unsafe="formattedSeen(message.local_id)")
 
     hr.unit.span-grid
 

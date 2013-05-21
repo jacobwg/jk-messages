@@ -58,6 +58,7 @@ app.controller('MessagesController', ['$scope', '$timeout',
     // Messages
     $scope.hasMessagesCache = store.get('messages') !== undefined;
     $scope.messages = store.get('messages') || [];
+    $scope.seen = {};
 
     // Data
     $scope.data = {currentMessage: 0};
@@ -132,20 +133,28 @@ app.controller('MessagesController', ['$scope', '$timeout',
       return $scope.currentMessages().length !== 0 || $scope.loading;
     };
 
+    $scope.showSeen = function(id) {
+      return !!($scope.seen[id]);
+    };
+
+    $scope.formattedSeen = function(id) {
+      if ($scope.showSeen(id)) {
+        return '✓ Seen by ' + _.map($scope.seen[id], function(person) { return '<span title="' + moment.unix(person.time).format("dddd, MMMM Do YYYY, h:mm:ss a") + '">' + person.name + '</span>'; }).join(', ');
+      }
+    };
+
     var db = new Firebase('https://jacob-and-kathryn.firebaseio.com/');
 
     var usersDB = db.child('users');
     var messagesDB = db.child('messages');
     var dataDB = db.child('data');
+    var seenDB = db.child('seen');
 
     var buildMessage = function(message) {
       message.body = simpleFormat(message.body);
       message.header = messageHeader(message);
       message.author_key = getAuthorKey(message.author_id);
-      message.seen_by = message.seen_by || [];
-      message.filtered_seen_by = _.filter(message.seen_by, function(item, id) { return true; });
-      message.has_seen_by = message.filtered_seen_by.length > 0 && false;
-      message.formatted_seen_by = '✓ Seen by ' + _.map(message.filtered_seen_by, function(person) { return '<span title="' + moment.unix(person.time).format("dddd, MMMM Do YYYY, h:mm:ss a") + '">' + person.name + '</span>'; }).join(', ');
+      message.local_id = parseInt(message.message_id.replace('510521608973600_', ''));
       return message;
     };
 
@@ -162,8 +171,7 @@ app.controller('MessagesController', ['$scope', '$timeout',
       var limit = $scope.data.currentMessage - $scope.lastId();
       if (limit > 100) {
         messagesDB.once('value', function(snap) {
-          console.log(snap.val());
-          $scope.$apply(function() {
+          $scope.safeApply(function() {
             $scope.messages = _.map(snap.val(), buildMessage);
             $scope.loading = false;
           });
@@ -172,7 +180,7 @@ app.controller('MessagesController', ['$scope', '$timeout',
         });
       } else {
         if (limit === 0)
-          $scope.$apply(function() {
+          $scope.safeApply(function() {
             $scope.loading = false;
           });
         messagesDB.startAt($scope.lastDate() + 1).limit($scope.data.currentMessage - $scope.lastId() + 20).on('child_added', function(snap) {
@@ -198,6 +206,12 @@ app.controller('MessagesController', ['$scope', '$timeout',
             $scope.authenticated = snap.val();
           });
           if (snap.val() === true) {
+            seenDB.on('value', function(snap) {
+              $scope.safeApply(function() {
+                $scope.seen = snap.val();
+              });
+            });
+
             dataDB.on('value', function(snap) {
               $scope.safeApply(function() {
                 $scope.data = snap.val();
@@ -227,14 +241,20 @@ app.controller('MessagesController', ['$scope', '$timeout',
       document.title = $scope.currentMoment().format('dddd, MMMM Do YYYY') + ' | The J&K Messages';
     });
 
-    $scope.$watch('authenticated + loggedIn + currentMessages()', function() {
+    $scope.$watch('authenticated + loggedIn + currentDate', function() {
       if ($scope.loggedIn && $scope.authenticated) {
         _.each($scope.currentMessages(), function(message, id) {
-          messagesDB.child(message.message_id.replace('510521608973600_', '')).child('seen_by').child('fb-' + $scope.auth.id).set({
+          seenDB.child(message.local_id).child('fb-' + $scope.auth.id).set({
             name: $scope.auth.first_name,
             time: moment().unix()
           });
         });
+      }
+    });
+
+    $scope.$watch('messages', function() {
+      if (router.getRoute()[0] === '') {
+        goToLast();
       }
     });
 
