@@ -17,20 +17,19 @@
   <link rel="apple-touch-icon-precomposed" sizes="114x114" href="icons/apple-touch-icon-114x114-precomposed.png" />
   <link rel="apple-touch-icon-precomposed" sizes="144x144" href="icons/apple-touch-icon-144x144-precomposed.png" />
 
+  <script type="text/javascript" src="//use.typekit.net/orz6hwj.js"></script>
+  <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
+
+  <% if (@getEnvironment() != 'development'): %>
   <script src="//d3nslu0hdya83q.cloudfront.net/dist/1.0/raven.min.js"></script>
   <script>
   Raven.config('https://705475ce45f44e9ba3be04d05276e6be@app.getsentry.com/8714').install();
   </script>
+  <% end %>
+
+  <% for script in @site.scripts: %><script src="<%= script %>"></script><% end %>
 </head>
 <body ng-app="app" ng-controller="MessagesController">
   <%- @content %>
-
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-  <script>window.jQuery || document.write('<script src="/vendor/jquery.js"><\/script>')</script>
-
-  <script type="text/javascript" src="//use.typekit.net/orz6hwj.js"></script>
-  <script type="text/javascript">try{Typekit.load();}catch(e){}</script>
-
-  <%- @getBlock('scripts').add(@site.scripts).toHTML() %>
 </body>
 </html>
