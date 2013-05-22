@@ -1,8 +1,8 @@
 var app = angular.module('app', []);
 
-if (store.get('version') !== 2) {
+if (store.get('version') !== 3) {
   store.remove('messages');
-  store.set('version', 2);
+  store.set('version', 3);
 }
 
 var formatDuration = function(duration) {
@@ -31,7 +31,7 @@ var formatDate = function(date) {
 };
 
 var messageHeader = function(message) {
-  return formatDate(new Date(message.created_time * 1000)) + ' - ' + getAuthorName(message.author_id) + ':';
+  return moment.unix(message.created_time).format("dddd, MMMM Do YYYY, h:mm:ss a") + ' - ' + getAuthorName(message.author_id) + ':';
 };
 
 var simpleFormat = function(content) {
