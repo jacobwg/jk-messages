@@ -6,7 +6,7 @@ if (store.get('version') !== 3) {
 }
 
 var formatDuration = function(duration) {
-  var days = parseInt(duration.asDays());
+  var days = parseInt(duration.asDays(), 10);
   return days === 1 ? '1 day' : days + ' days';
 };
 
@@ -24,14 +24,6 @@ var getAuthorKey = function(author_id) {
   } else {
     return 'jacob';
   }
-};
-
-var formatDate = function(date) {
-  return date.format('default');
-};
-
-var messageHeader = function(message) {
-  return moment.unix(message.created_time).format("dddd, MMMM Do YYYY, h:mm:ss a") + ' - ' + getAuthorName(message.author_id) + ':';
 };
 
 var simpleFormat = function(content) {
@@ -118,7 +110,7 @@ app.controller('MessagesController', ['$scope', '$timeout',
     };
 
     $scope.messageDays = function() {
-      return _.uniq(_.map($scope.messages, function(message) { return moment.unix(message.created_time).format('YYYY-MM-DD'); }));
+      return _.uniq(_.map($scope.messages, function(message) { return moment.unix(message.created_time).format('YYYY-MM-DD'); }), true);
     };
 
     $scope.emptyDays = function() {
@@ -157,9 +149,9 @@ app.controller('MessagesController', ['$scope', '$timeout',
 
     var buildMessage = function(message) {
       message.body = simpleFormat(message.body);
-      message.header = messageHeader(message);
+      message.header = moment.unix(message.created_time).format("dddd, MMMM Do YYYY, h:mm:ss a") + ' - ' + getAuthorName(message.author_id) + ':';
       message.author_key = getAuthorKey(message.author_id);
-      message.local_id = parseInt(message.message_id.replace('510521608973600_', ''));
+      message.local_id = parseInt(message.message_id.replace('510521608973600_', ''), 10);
       return message;
     };
 
