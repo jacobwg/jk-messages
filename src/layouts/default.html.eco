@@ -7,8 +7,6 @@
 
   <title><%= @getPreparedTitle() %></title>
 
-  <%- @getBlock('meta').toHTML() %>
-
   <%- @getBlock('styles').add(@site.styles).toHTML() %>
 
   <link rel="shortcut icon" href="/icons/favicon.ico" />
