@@ -42,14 +42,7 @@ docpadConfig = {
 			scripts: [
 				'https://cdn.firebase.com/v0/firebase.js'
 				'https://cdn.firebase.com/v0/firebase-auth-client.js'
-				'/vendor/log.js'
-				'/vendor/jquery.min.js'
-				'/vendor/moment.min.js'
-				'/vendor/store.min.js'
-				'/vendor/lodash.js'
-				'/vendor/angular.js'
-				'/vendor/autolink.js'
-				'/vendor/director.js'
+				'/vendor/vendor.js'
 				'/scripts/script.js'
 			]
 
