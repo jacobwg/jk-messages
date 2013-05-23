@@ -60,30 +60,42 @@ app.controller('MessagesController', ['$scope', '$timeout',
     // Data
     $scope.data = {currentMessage: 0};
     $scope.firstDate = 1344867195;
+    $scope.firstMoment = moment.unix($scope.firstDate);
     $scope.currentDate = 1344867195; //moment().unix();
     $scope.loading = true;
     $scope.durationMessages = formatDuration(moment.duration(moment() - moment('2012-08-13 9:13am CST')));
     $scope.durationRelationship = formatDuration(moment.duration(moment() - moment('2012-10-21 1pm CST')));
 
     $scope.cache = {
+      currentMoment: {},
       currentDateStart: {},
-      currentDateEnd: {}
+      currentDateEnd: {},
+      nextDay: {},
+      prevDay: {}
     };
 
-    $scope.firstMoment = function() {
-      return moment.unix($scope.firstDate);
+    var cache = function(store, key, value) {
+      if (!store[key]) console.log('cache miss', store, key);
+      store[key] = store[key] || value();
+      return store[key];
     };
 
     $scope.currentMoment = function() {
-      return moment.unix($scope.currentDate);
+      return cache($scope.cache.currentMoment, $scope.currentDate, function() {
+        return moment.unix($scope.currentDate);
+      });
     };
 
     $scope.startOfCurrentDay = function() {
-      return ($scope.cache.currentDateStart[$scope.currentDate] = $scope.cache.currentDateStart[$scope.currentDate] || $scope.currentMoment().startOf('day').unix());
+      return cache($scope.cache.currentDateStart, $scope.currentDate, function() {
+        return $scope.currentMoment().startOf('day').unix();
+      });
     };
 
     $scope.endOfCurrentDay = function() {
-      return ($scope.cache.currentDateEnd[$scope.currentDate] = $scope.cache.currentDateEnd[$scope.currentDate] || $scope.currentMoment().endOf('day').unix());
+      return cache($scope.cache.currentDateEnd, $scope.currentDate, function() {
+        return $scope.currentMoment().endOf('day').unix();
+      });
     };
 
     $scope.lastDate = function() {
@@ -99,11 +111,15 @@ app.controller('MessagesController', ['$scope', '$timeout',
     };
 
     $scope.nextDay = function() {
-      return moment($scope.currentMoment()).add('days', 1).format('YYYY-MM-DD');
+      return cache($scope.cache.nextDay, $scope.currentDate, function() {
+        return moment($scope.currentMoment()).add('days', 1).format('YYYY-MM-DD');
+      });
     };
 
     $scope.prevDay = function() {
-      return moment($scope.currentMoment()).subtract('days', 1).format('YYYY-MM-DD');
+      return cache($scope.cache.prevDay, $scope.currentDate, function() {
+        return moment($scope.currentMoment()).subtract('days', 1).format('YYYY-MM-DD');
+      });
     };
 
     $scope.currentMessages = function() {
