@@ -65,7 +65,7 @@ div.container(id='main', ng-show="loggedIn && authenticated")
       div {{ durationRelationship }}
     div.unit.one-of-five(ng-show="hasCache || !loading")
       strong Word Count
-      div {{ wordCount() }}
+      div {{ wordCount }}
     div.unit.one-of-five(ng-show='hasCache || !loading')
       strong Days with Messages
-      div {{ messageDays().length }}
+      div {{ messageDays.length }}

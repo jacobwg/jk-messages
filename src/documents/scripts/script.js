@@ -65,6 +65,10 @@ app.controller('MessagesController', ['$scope', '$timeout',
     $scope.durationMessages = formatDuration(moment.duration(moment() - moment('2012-08-13 9:13am CST')));
     $scope.durationRelationship = formatDuration(moment.duration(moment() - moment('2012-10-21 1pm CST')));
 
+    $scope.cache = {
+      currentDateStart: {},
+      currentDateEnd: {}
+    };
 
     $scope.firstMoment = function() {
       return moment.unix($scope.firstDate);
@@ -72,6 +76,14 @@ app.controller('MessagesController', ['$scope', '$timeout',
 
     $scope.currentMoment = function() {
       return moment.unix($scope.currentDate);
+    };
+
+    $scope.startOfCurrentDay = function() {
+      return ($scope.cache.currentDateStart[$scope.currentDate] = $scope.cache.currentDateStart[$scope.currentDate] || $scope.currentMoment().startOf('day').unix());
+    };
+
+    $scope.endOfCurrentDay = function() {
+      return ($scope.cache.currentDateEnd[$scope.currentDate] = $scope.cache.currentDateEnd[$scope.currentDate] || $scope.currentMoment().endOf('day').unix());
     };
 
     $scope.lastDate = function() {
@@ -96,8 +108,7 @@ app.controller('MessagesController', ['$scope', '$timeout',
 
     $scope.currentMessages = function() {
       return _.filter($scope.messages, function(message) {
-        var m = moment.unix(message.created_time);
-        return ($scope.currentMoment().year() === m.year() && $scope.currentMoment().month() === m.month() && $scope.currentMoment().date() === m.date());
+        return (message.created_time >= $scope.startOfCurrentDay() && message.created_time <= $scope.endOfCurrentDay());
       });
     };
 
@@ -109,25 +120,27 @@ app.controller('MessagesController', ['$scope', '$timeout',
       return dates;
     };
 
-    $scope.messageDays = function() {
-      return _.uniq(_.map($scope.messages, function(message) { return moment.unix(message.created_time).format('YYYY-MM-DD'); }), true);
-    };
+    $scope.messageDays = [];
 
     $scope.emptyDays = function() {
       return _.difference($scope.dateRange(), $scope.messageDays());
     };
 
-    $scope.wordCount = function() {
+    $scope.wordCount = 0;
+
+    $scope.$watch('messages', function() {
+      $scope.messageDays = _.uniq(_.map($scope.messages, function(message) { return moment.unix(message.created_time).format('YYYY-MM-DD'); }), true);
+      console.log('wc');
       var counts = _.map($scope.messages, function(message) {
         return ((message.body || ' ').match(/\S+/g) || []).length;
       });
-      return _.reduce(counts, function(memo, count) {
+      $scope.wordCount = _.reduce(counts, function(memo, count) {
         return memo + count;
       }, 0);
-    };
+    });
 
     $scope.hasMessagesToday = function() {
-      return $scope.currentMessages().length !== 0 || $scope.loading;
+      return $scope.currentMessages().length > 0 || $scope.loading;
     };
 
     $scope.showSeen = function(id) {
