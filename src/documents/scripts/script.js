@@ -75,7 +75,6 @@ app.controller('MessagesController', ['$scope', '$timeout',
     };
 
     var cache = function(store, key, value) {
-      if (!store[key]) console.log('cache miss', store, key);
       store[key] = store[key] || value();
       return store[key];
     };
@@ -137,16 +136,11 @@ app.controller('MessagesController', ['$scope', '$timeout',
     };
 
     $scope.messageDays = [];
-
-    $scope.emptyDays = function() {
-      return _.difference($scope.dateRange(), $scope.messageDays());
-    };
-
     $scope.wordCount = 0;
 
     $scope.$watch('messages', function() {
       $scope.messageDays = _.uniq(_.map($scope.messages, function(message) { return moment.unix(message.created_time).format('YYYY-MM-DD'); }), true);
-      console.log('wc');
+
       var counts = _.map($scope.messages, function(message) {
         return ((message.body || ' ').match(/\S+/g) || []).length;
       });
@@ -154,6 +148,10 @@ app.controller('MessagesController', ['$scope', '$timeout',
         return memo + count;
       }, 0);
     });
+
+    $scope.emptyDays = function() {
+      return _.difference($scope.dateRange(), $scope.messageDays());
+    };
 
     $scope.hasMessagesToday = function() {
       return $scope.currentMessages().length > 0 || $scope.loading;
