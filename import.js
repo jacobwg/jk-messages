@@ -33,6 +33,7 @@ var loadMessage = function(id) {
   var q = 'SELECT attachment, author_id, body, created_time, message_id, source, thread_id FROM message WHERE message_id="510521608973600_' + id + '"';
   queryFB(q).then(function(data) {
     var message = data.data[0];
+    message.word_count = ((message.body || ' ').match(/\S+/g) || []).length;
     console.log('Fetched message ID ' + id);
     messagesDB.child(id).setWithPriority(message, message.created_time);
     dataDB.child('currentMessage').transaction(function(currentMessage) {

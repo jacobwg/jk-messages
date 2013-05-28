@@ -141,11 +141,8 @@ app.controller('MessagesController', ['$scope', '$timeout',
     $scope.$watch('messages', function() {
       $scope.messageDays = _.uniq(_.map($scope.messages, function(message) { return moment.unix(message.created_time).format('YYYY-MM-DD'); }), true);
 
-      var counts = _.map($scope.messages, function(message) {
-        return ((message.body || ' ').match(/\S+/g) || []).length;
-      });
-      $scope.wordCount = _.reduce(counts, function(memo, count) {
-        return memo + count;
+      $scope.wordCount = _.reduce($scope.messages, function(memo, message) {
+        return memo + message.word_count;
       }, 0);
     });
 
