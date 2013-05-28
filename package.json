@@ -45,8 +45,5 @@
     "firebase": "~0.5.2",
     "docpad-plugin-ghpages": "~2.0.2"
   },
-  "devDependencies": {
-    "docpad-plugin-livereload": "2.x"
-  },
   "main": "node_modules/docpad/bin/docpad-server"
 }
