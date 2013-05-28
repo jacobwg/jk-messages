@@ -1,8 +1,8 @@
 var app = angular.module('app', []);
 
-if (store.get('version') !== 3) {
+if (store.get('version') !== 4) {
   store.remove('messages');
-  store.set('version', 3);
+  store.set('version', 4);
 }
 
 var formatDuration = function(duration) {
