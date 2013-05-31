@@ -47,9 +47,12 @@ app.controller('MessagesController', ['$scope', '$timeout',
       }
     };
 
+    // Application State (loading, anonymous, authorizing, authorized-updating, authorized-current, unauthorized)
+    $scope.state = 'loading';
+
+    $scope.stateIs = function(state) { return $scope.state === state; };
+
     // Authentication
-    $scope.loggedIn = false;
-    $scope.authenticated = 'loading';
     $scope.auth = {};
 
     // Messages
@@ -62,7 +65,6 @@ app.controller('MessagesController', ['$scope', '$timeout',
     $scope.firstDate = 1344867195;
     $scope.firstMoment = moment.unix($scope.firstDate);
     $scope.currentDate = 1344867195; //moment().unix();
-    $scope.loading = true;
     $scope.durationMessages = formatDuration(moment.duration(moment() - moment('2012-08-13 9:13am CST')));
     $scope.durationRelationship = formatDuration(moment.duration(moment() - moment('2012-10-21 1pm CST')));
 
@@ -151,7 +153,7 @@ app.controller('MessagesController', ['$scope', '$timeout',
     };
 
     $scope.hasMessagesToday = function() {
-      return $scope.currentMessages().length > 0 || $scope.loading;
+      return $scope.currentMessages().length > 0;
     };
 
     $scope.showSeen = function(id) {
@@ -181,7 +183,7 @@ app.controller('MessagesController', ['$scope', '$timeout',
 
     var updateMessage = function(snap) {
       $scope.safeApply(function() {
-        $scope.loading = false;
+        $scope.state = 'authorized-current';
         var message = buildMessage(snap);
         $scope.messages[message.local_id] = message;
         store.set('messages', $scope.messages);
@@ -194,7 +196,7 @@ app.controller('MessagesController', ['$scope', '$timeout',
         messagesDB.once('value', function(snap) {
           $scope.safeApply(function() {
             $scope.messages = _.map(snap.val(), buildMessage);
-            $scope.loading = false;
+            $scope.state = 'authorized-current';
           });
           store.set('messages', $scope.messages);
           watchMessages();
@@ -202,7 +204,7 @@ app.controller('MessagesController', ['$scope', '$timeout',
       } else {
         if (limit === 0)
           $scope.safeApply(function() {
-            $scope.loading = false;
+            $scope.state = 'authorized-current';
           });
         messagesDB.startAt($scope.lastDate() + 1).limit($scope.data.currentMessage - $scope.lastId() + 20).on('child_added', function(snap) {
           updateMessage(snap.val());
@@ -219,14 +221,15 @@ app.controller('MessagesController', ['$scope', '$timeout',
       } else if (user) {
         $scope.safeApply(function() {
           $scope.auth = user;
-          $scope.loggedIn = true;
+          $scope.state = 'authorizing';
         });
 
         usersDB.child('fb-' + user.id).once('value', function(snap) {
-          $scope.safeApply(function() {
-            $scope.authenticated = snap.val();
-          });
           if (snap.val() === true) {
+            $scope.safeApply(function() {
+              $scope.state = 'authorized-updating';
+            });
+
             seenDB.on('value', function(snap) {
               $scope.safeApply(function() {
                 $scope.seen = snap.val();
@@ -239,9 +242,16 @@ app.controller('MessagesController', ['$scope', '$timeout',
               });
               watchMessages();
             });
+          } else {
+            $scope.safeApply(function() {
+              $scope.state = 'unauthorized';
+            });
           }
         });
       } else {
+        $scope.safeApply(function() {
+          $scope.state = 'anonymous';
+        });
       }
     });
 
@@ -262,8 +272,8 @@ app.controller('MessagesController', ['$scope', '$timeout',
       document.title = $scope.currentMoment().format('dddd, MMMM Do YYYY') + ' | The J&K Messages';
     });
 
-    $scope.$watch('authenticated + loggedIn + currentDate', function() {
-      if ($scope.loggedIn && $scope.authenticated) {
+    $scope.$watch('state + currentDate + messages', function() {
+      if ($scope.state === 'authorized-current') {
         _.each($scope.currentMessages(), function(message, id) {
           seenDB.child(message.local_id).child('fb-' + $scope.auth.id).set({
             name: $scope.auth.first_name,
