@@ -23,6 +23,7 @@ html(lang="en", class="wf-loading")
       script(src="//d3nslu0hdya83q.cloudfront.net/dist/1.0/raven.min.js")
       script(type="text/javascript")
         Raven.config('https://705475ce45f44e9ba3be04d05276e6be@app.getsentry.com/8714').install();
+    else
       | !{getBlock('scripts').toHTML()}
 
     for script in site.scripts

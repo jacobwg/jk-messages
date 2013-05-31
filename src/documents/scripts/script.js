@@ -1,29 +1,13 @@
 var app = angular.module('app', []);
 
-if (store.get('version') !== 4) {
+if (store.get('version') !== 5) {
   store.remove('messages');
-  store.set('version', 4);
+  store.set('version', 5);
 }
 
 var formatDuration = function(duration) {
   var days = parseInt(duration.asDays(), 10);
   return days === 1 ? '1 day' : days + ' days';
-};
-
-var getAuthorName = function(author_id) {
-  if (author_id === 100003843585453) {
-    return 'Kathryn Elizabeth';
-  } else {
-    return 'Jacob Gillespie';
-  }
-};
-
-var getAuthorKey = function(author_id) {
-  if (author_id === 100003843585453) {
-    return 'kathryn';
-  } else {
-    return 'jacob';
-  }
 };
 
 var simpleFormat = function(content) {
@@ -173,8 +157,7 @@ app.controller('MessagesController', ['$scope', '$timeout',
 
     var buildMessage = function(message) {
       message.body = simpleFormat(message.body);
-      message.header = moment.unix(message.created_time).format("dddd, MMMM Do YYYY, h:mm:ss a") + ' - ' + getAuthorName(message.author_id) + ':';
-      message.author_key = getAuthorKey(message.author_id);
+      message.header = moment.unix(message.created_time).format("dddd, MMMM Do YYYY, h:mm:ss a") + ' - ' + message.name + ':';
       message.local_id = parseInt(message.message_id.replace('510521608973600_', ''), 10);
       return message;
     };
@@ -281,12 +264,6 @@ app.controller('MessagesController', ['$scope', '$timeout',
       }
     });
 
-    $scope.$watch('messages', function() {
-      if (router.getRoute()[0] === '') {
-        goToLast();
-      }
-    });
-
     // Routing
     var goToDate = function(date) {
       $timeout(function() {
@@ -310,6 +287,13 @@ app.controller('MessagesController', ['$scope', '$timeout',
     var router = Router(routes);
     router.init('/');
 
+    $scope.$watch('messages', function() {
+      if (router.getRoute()[0] === '') {
+        goToLast();
+      }
+    });
+
+    // Expose scope for debugging
     window.s = $scope;
 
   }
