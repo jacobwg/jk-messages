@@ -33,7 +33,8 @@ div.container(id='main')
       div(ng-repeat="message in currentMessages()")
         div(ng-class="message.author_key")
           div.unit.one-of-five
-            img.hide-mobile(ng-src="/images/{{message.author_key}}.jpg")
+            span.avatar.hide-mobile
+              img(ng-src="/images/{{message.author_key}}.jpg")
           div.unit.four-of-five
             p
               strong {{ message.header }}
