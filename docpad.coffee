@@ -1,5 +1,3 @@
-# The DocPad Configuration File
-# It is simply a CoffeeScript Object which is parsed by CSON
 docpadConfig = {
 
 	# =================================
@@ -21,16 +19,6 @@ docpadConfig = {
 
 			# The default title of our website
 			title: "J&K Messages"
-
-			# The website description (for SEO)
-			description: """
-				When your website appears in search results in say Google, the text here will be shown underneath your website's title.
-				"""
-
-			# The website keywords (for SEO) separated by commas
-			keywords: """
-				place, your, website, keywoards, here, keep, them, related, to, the, content, of, your, website
-				"""
 
 			# The website's styles
 			styles: [
@@ -61,15 +49,6 @@ docpadConfig = {
 			else
 				@site.title
 
-		# Get the prepared site/document description
-		getPreparedDescription: ->
-			# if we have a document description, then we should use that, otherwise use the site's description
-			@document.description or @site.description
-
-		# Get the prepared site/document keywords
-		getPreparedKeywords: ->
-			# Merge the document keywords with the site keywords
-			@site.keywords.concat(@document.keywords or []).join(', ')
 
 
 	# =================================
