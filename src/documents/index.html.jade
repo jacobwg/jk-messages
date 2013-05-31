@@ -14,7 +14,7 @@ div.container(id='main')
         h2.site-tagline(ng-switch-when="authorizing") Checking your credentials...
         h2.site-tagline(ng-switch-when="unauthorized") You are not authorized...
         h2.site-tagline(ng-switch-default) {{ currentMoment().format('dddd, MMMM Do YYYY') }}
-      div(ng-show="stateIs('authorized-updating')")
+      div(ng-show="state == 'authorized-updating'")
         strong Checking for new messages...&nbsp;
         img(src='/images/ajax-loader.gif')
     div.unit.one-of-three

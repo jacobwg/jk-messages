@@ -50,8 +50,6 @@ app.controller('MessagesController', ['$scope', '$timeout',
     // Application State (loading, anonymous, authorizing, authorized-updating, authorized-current, unauthorized)
     $scope.state = 'loading';
 
-    $scope.stateIs = function(state) { return $scope.state === state; };
-
     // Authentication
     $scope.auth = {};
 
