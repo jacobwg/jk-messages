@@ -32,8 +32,7 @@ app.controller('MessagesController', ['$scope', '$timeout',
     $scope.auth = {};
 
     // Messages
-    $scope.hasMessagesCache = store.get('messages') !== undefined;
-    $scope.messages = store.get('messages') || [];
+    $scope.messages = [];
     $scope.seen = {};
 
     // Data
@@ -57,80 +56,31 @@ app.controller('MessagesController', ['$scope', '$timeout',
       return store[key];
     };
 
-    $scope.currentMoment = function() {
-      return cache($scope.cache.currentMoment, $scope.currentDate, function() {
+    $scope.$watch('currentDate', function() {
+      $scope.currentMoment = cache($scope.cache.currentMoment, $scope.currentDate, function() {
         return moment.unix($scope.currentDate);
       });
-    };
 
-    $scope.startOfCurrentDay = function() {
-      return cache($scope.cache.currentDateStart, $scope.currentDate, function() {
-        return $scope.currentMoment().startOf('day').unix();
+      $scope.nextDay = cache($scope.cache.nextDay, $scope.currentDate, function() {
+        return moment($scope.currentMoment).add('days', 1).format('YYYY-MM-DD');
       });
-    };
 
-    $scope.endOfCurrentDay = function() {
-      return cache($scope.cache.currentDateEnd, $scope.currentDate, function() {
-        return $scope.currentMoment().endOf('day').unix();
+      $scope.prevDay = cache($scope.cache.prevDay, $scope.currentDate, function() {
+        return moment($scope.currentMoment).subtract('days', 1).format('YYYY-MM-DD');
       });
-    };
 
-    $scope.lastDate = function() {
-      return _.max($scope.messages, function(message) { return message.created_time; }).created_time || $scope.firstDate;
-    };
-
-    $scope.lastId = function() {
-      return $scope.messages.length - 1;
-    };
-
-    $scope.lastMoment = function() {
-      return moment.unix($scope.lastDate());
-    };
-
-    $scope.nextDay = function() {
-      return cache($scope.cache.nextDay, $scope.currentDate, function() {
-        return moment($scope.currentMoment()).add('days', 1).format('YYYY-MM-DD');
+      $scope.startOfCurrentDay = cache($scope.cache.currentDateStart, $scope.currentDate, function() {
+        return $scope.currentMoment.startOf('day').unix();
       });
-    };
 
-    $scope.prevDay = function() {
-      return cache($scope.cache.prevDay, $scope.currentDate, function() {
-        return moment($scope.currentMoment()).subtract('days', 1).format('YYYY-MM-DD');
+      $scope.endOfCurrentDay = cache($scope.cache.currentDateEnd, $scope.currentDate, function() {
+        return $scope.currentMoment.endOf('day').unix();
       });
-    };
 
-    $scope.currentMessages = function() {
-      return _.filter($scope.messages, function(message) {
-        return (message.created_time >= $scope.startOfCurrentDay() && message.created_time <= $scope.endOfCurrentDay());
-      });
-    };
-
-    $scope.dateRange = function() {
-      var dates = [];
-      for(var i = moment($scope.firstMoment()); i.isBefore($scope.lastMoment()); i.add('days', 1)) {
-        dates.push(i.format('YYYY-MM-DD'));
-      }
-      return dates;
-    };
-
-    $scope.messageDays = [];
-    $scope.wordCount = 0;
-
-    $scope.$watch('messages', function() {
-      $scope.messageDays = _.uniq(_.map($scope.messages, function(message) { return moment.unix(message.created_time).format('YYYY-MM-DD'); }), true);
-
-      $scope.wordCount = _.reduce($scope.messages, function(memo, message) {
-        return memo + message.word_count;
-      }, 0);
+      document.title = $scope.currentMoment.format('dddd, MMMM Do YYYY') + ' | The J&K Messages';
     });
 
-    $scope.emptyDays = function() {
-      return _.difference($scope.dateRange(), $scope.messageDays());
-    };
-
-    $scope.hasMessagesToday = function() {
-      return $scope.currentMessages().length > 0;
-    };
+    $scope.hasMessagesToday = false;
 
     $scope.showSeen = function(id) {
       return !!($scope.seen[id]);
@@ -142,10 +92,6 @@ app.controller('MessagesController', ['$scope', '$timeout',
       }
     };
 
-    var saveMessages = function() {
-      store.set('messages', $scope.messages);
-    };
-
     var db = new Firebase('https://jacob-and-kathryn.firebaseio.com/');
 
     var usersDB = db.child('users');
@@ -153,37 +99,17 @@ app.controller('MessagesController', ['$scope', '$timeout',
     var dataDB = db.child('data');
     var seenDB = db.child('seen');
 
-    var updateMessage = function(message) {
-      $scope.safeApply(function() {
-        $scope.state = 'authorized-current';
-        $scope.messages[message.local_id] = message;
-        saveMessages();
+    var loadMessages = function() {
+      $scope.messages = [];
+      $scope.state = 'authorized-updating';
+      messagesDB.off();
+      messagesDB.startAt($scope.startOfCurrentDay).endAt($scope.endOfCurrentDay).on('value', function(snap) {
+        $scope.safeApply(function() {
+          $scope.messages = _.filter(snap.val(), function(message) { return message !== undefined; });
+          $scope.hasMessagesToday = ($scope.messages.length > 0);
+          $scope.state = 'authorized-current';
+        });
       });
-    };
-
-    var watchMessages = function() {
-      var limit = $scope.data.currentMessage - $scope.lastId();
-      if (limit > 100) {
-        messagesDB.once('value', function(snap) {
-          $scope.safeApply(function() {
-            $scope.messages = snap.val();
-            $scope.state = 'authorized-current';
-          });
-          saveMessages();
-          watchMessages();
-        });
-      } else {
-        if (limit === 0)
-          $scope.safeApply(function() {
-            $scope.state = 'authorized-current';
-          });
-        messagesDB.startAt($scope.lastDate() + 1).limit($scope.data.currentMessage - $scope.lastId() + 20).on('child_added', function(snap) {
-          updateMessage(snap.val());
-        });
-        messagesDB.on('child_changed', function(snap) {
-          updateMessage(snap.val());
-        });
-      }
     };
 
     var authClient = new FirebaseAuthClient(db, function(error, user) {
@@ -211,7 +137,10 @@ app.controller('MessagesController', ['$scope', '$timeout',
               $scope.safeApply(function() {
                 $scope.data = snap.val();
               });
-              watchMessages();
+              loadMessages();
+              $scope.$watch('currentDate', function() {
+                loadMessages();
+              });
             });
           } else {
             $scope.safeApply(function() {
@@ -238,14 +167,9 @@ app.controller('MessagesController', ['$scope', '$timeout',
       window.location.reload();
     };
 
-    // Watchers
-    $scope.$watch('currentDate', function() {
-      document.title = $scope.currentMoment().format('dddd, MMMM Do YYYY') + ' | The J&K Messages';
-    });
-
     $scope.$watch('state + currentDate + messages', function() {
       if ($scope.state === 'authorized-current') {
-        _.each($scope.currentMessages(), function(message, id) {
+        _.each($scope.messages, function(message, id) {
           seenDB.child(message.local_id).child('fb-' + $scope.auth.id).set({
             name: $scope.auth.first_name,
             time: moment().unix()
@@ -265,7 +189,7 @@ app.controller('MessagesController', ['$scope', '$timeout',
 
     var goToLast = function() {
       $scope.safeApply(function() {
-        $scope.currentDate = $scope.lastDate();
+        $scope.currentDate = $scope.data.lastMessageTime || $scope.firstDate;
       });
     };
 

@@ -56,6 +56,18 @@ var loadMessage = function(id) {
       else
         return currentMessage;
     });
+
+    dataDB.child('lastMessageTime').transaction(function(lastMessageTime) {
+      if (lastMessageTime < message.created_time)
+        return message.created_time;
+      else
+        return lastMessageTime;
+    });
+
+    dataDB.child('wordCount').transaction(function(wordCount) {
+      return wordCount + message.word_count;
+    });
+
     deferred.resolve(message);
   }, function(err) {
     deferred.reject(err);
