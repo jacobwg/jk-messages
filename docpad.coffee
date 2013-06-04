@@ -1,32 +1,21 @@
 docpadConfig = {
 
-	# =================================
-	# Template Data
-	# These are variables that will be accessible via our templates
-	# To access one of these within our templates, refer to the FAQ: https://github.com/bevry/docpad/wiki/FAQ
-
 	templateData:
 
-		# Specify some site properties
 		site:
-			# The production url of our website
 			url: "http://messages.jacobandkathryn.com"
 
-			# Here are some old site urls that you would like to redirect from
 			oldUrls: [
 				'kathryn.jacobwg.com'
 			]
 
-			# The default title of our website
 			title: "J&K Messages"
 
-			# The website's styles
 			styles: [
 				'/vendor/toast.css'
 				'/styles/style.css'
 			]
 
-			# The website's scripts
 			scripts: [
 				'https://cdn.firebase.com/v0/firebase.js'
 				'https://cdn.firebase.com/v0/firebase-auth-client.js'
@@ -34,28 +23,12 @@ docpadConfig = {
 				'/scripts/app.js'
 			]
 
-
-		# -----------------------------
-		# Helper Functions
-
-		# Get the prepared site/document title
-		# Often we would like to specify particular formatting to our page's title
-		# we can apply that formatting here
 		getPreparedTitle: ->
-			# if we have a document title, then we should use that and suffix the site's title onto it
 			if @document.title
 				"#{@document.title} | #{@site.title}"
-			# if our document does not have it's own title, then we should just use the site's title
 			else
 				@site.title
 
-
-
-	# =================================
-	# DocPad Events
-
-	# Here we can define handlers for events that DocPad fires
-	# You can find a full listing of events on the DocPad Wiki
 	events:
 
 		# Server Extend
@@ -80,5 +53,4 @@ docpadConfig = {
 					next()
 }
 
-# Export our DocPad Configuration
 module.exports = docpadConfig
