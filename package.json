@@ -36,7 +36,8 @@
     "fb": "~0.6.2",
     "nconf": "~0.6.7",
     "firebase": "~0.5.2",
-    "docpad-plugin-ghpages": "~2.0.2"
+    "docpad-plugin-ghpages": "~2.0.2",
+    "moment": "~2.0.0"
   },
   "devDependencies": {
     "docpad-plugin-livereload": "~2.4.0"

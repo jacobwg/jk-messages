@@ -1,7 +1,8 @@
 var fb = require('fb'),
     Firebase = require('firebase'),
     nconf = require('nconf'),
-    when = require('when');
+    when = require('when'),
+    moment = require('moment');
 
 nconf.argv()
    .env()
@@ -27,6 +28,8 @@ db.auth(nconf.get('FIREBASE_SECRET'));
 var dataDB = db.child('data');
 var messagesDB = db.child('messages');
 
+var url_pattern = /(^|\s)(\b(https?|ftp):\/\/[\-A-Z0-9+\u0026@#\/%?=~_|!:,.;]*[\-A-Z0-9+\u0026@#\/%=~_|])/gi;
+
 var loadMessage = function(id) {
   var deferred = when.defer();
 
@@ -37,6 +40,13 @@ var loadMessage = function(id) {
     message.word_count = ((message.body || ' ').match(/\S+/g) || []).length;
     message.author_key = (message.author_id == '100000505263000') ? 'jacob' : 'kathryn';
     message.name = (message.author_id == '100000505263000') ? 'Jacob Gillespie' : 'Kathryn Elizabeth';
+    message.header = moment.unix(message.created_time).format("dddd, MMMM Do YYYY, h:mm:ss a") + ' - ' + message.name + ':';
+
+    message.local_id = parseInt(message.message_id.replace('510521608973600_', ''), 10);
+
+    message.html = message.body.replace(/\n{2,}/g, '</p><p>').replace(/\n/g, '<br/>');
+    message.html = '<p>' + message.html + '</p>';
+    message.html = message.html.replace(url_pattern, "$1<a href='$2'>$2</a>");
 
     console.log('Fetched message ID ' + id);
     messagesDB.child(id).setWithPriority(message, message.created_time);

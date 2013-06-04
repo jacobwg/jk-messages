@@ -1,19 +1,13 @@
 var app = angular.module('app', []);
 
-if (store.get('version') !== 5) {
+if (store.get('version') !== 7) {
   store.remove('messages');
-  store.set('version', 5);
+  store.set('version', 7);
 }
 
 var formatDuration = function(duration) {
   var days = parseInt(duration.asDays(), 10);
   return days === 1 ? '1 day' : days + ' days';
-};
-
-var simpleFormat = function(content) {
-  content = content.replace(/\n{2,}/g, '</p><p>').replace(/\n/g, '<br/>');
-  content = '<p>' + content + '</p>';
-  return content.autoLink();
 };
 
 app.controller('MessagesController', ['$scope', '$timeout',
@@ -148,6 +142,10 @@ app.controller('MessagesController', ['$scope', '$timeout',
       }
     };
 
+    var saveMessages = function() {
+      store.set('messages', $scope.messages);
+    };
+
     var db = new Firebase('https://jacob-and-kathryn.firebaseio.com/');
 
     var usersDB = db.child('users');
@@ -155,19 +153,11 @@ app.controller('MessagesController', ['$scope', '$timeout',
     var dataDB = db.child('data');
     var seenDB = db.child('seen');
 
-    var buildMessage = function(message) {
-      message.body = simpleFormat(message.body);
-      message.header = moment.unix(message.created_time).format("dddd, MMMM Do YYYY, h:mm:ss a") + ' - ' + message.name + ':';
-      message.local_id = parseInt(message.message_id.replace('510521608973600_', ''), 10);
-      return message;
-    };
-
-    var updateMessage = function(snap) {
+    var updateMessage = function(message) {
       $scope.safeApply(function() {
         $scope.state = 'authorized-current';
-        var message = buildMessage(snap);
         $scope.messages[message.local_id] = message;
-        store.set('messages', $scope.messages);
+        saveMessages();
       });
     };
 
@@ -176,10 +166,10 @@ app.controller('MessagesController', ['$scope', '$timeout',
       if (limit > 100) {
         messagesDB.once('value', function(snap) {
           $scope.safeApply(function() {
-            $scope.messages = _.map(snap.val(), buildMessage);
+            $scope.messages = snap.val();
             $scope.state = 'authorized-current';
           });
-          store.set('messages', $scope.messages);
+          saveMessages();
           watchMessages();
         });
       } else {

@@ -38,7 +38,7 @@ div.container(id='main')
           div.unit.four-of-five
             p
               strong {{ message.header }}
-            div(ng-bind-html-unsafe="message.body")
+            div(ng-bind-html-unsafe="message.html")
             div(ng-show="showSeen(message.local_id)")
               small(ng-bind-html-unsafe="formattedSeen(message.local_id)")
 
