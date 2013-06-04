@@ -112,6 +112,12 @@ app.controller('MessagesController', ['$scope', '$timeout',
       });
     };
 
+    $scope.$watch('currentDate', function() {
+      if ($scope.state === 'authorized-current' || $scope.state === 'authorized-updating') {
+        loadMessages();
+      }
+    });
+
     var authClient = new FirebaseAuthClient(db, function(error, user) {
       if (error) {
         console.log(error);
@@ -138,9 +144,6 @@ app.controller('MessagesController', ['$scope', '$timeout',
                 $scope.data = snap.val();
               });
               loadMessages();
-              $scope.$watch('currentDate', function() {
-                loadMessages();
-              });
             });
           } else {
             $scope.safeApply(function() {
@@ -180,10 +183,8 @@ app.controller('MessagesController', ['$scope', '$timeout',
 
     // Routing
     var goToDate = function(date) {
-      $timeout(function() {
-        $scope.safeApply(function() {
-          $scope.currentDate = moment(date).unix();
-        });
+      $scope.safeApply(function() {
+        $scope.currentDate = moment(date).unix();
       });
     };
 
