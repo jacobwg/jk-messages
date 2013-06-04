@@ -1,4 +1,4 @@
-# Tracking Facebook Messages
+# The J&K Messages
 
 [![Dependency Status](https://gemnasium.com/jacobwg/jk-messages.png)](https://gemnasium.com/jacobwg/jk-messages)
 
