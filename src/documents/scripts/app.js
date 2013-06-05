@@ -31,10 +31,12 @@ app.controller('MessagesController', ['$scope', '$timeout',
     // Authentication
     $scope.auth = {};
     $scope.users = {};
+    $scope.onlineUsers = [];
 
     // Messages
     $scope.messages = [];
     $scope.seen = {};
+    $scope.hasMessagesToday = false;
 
     // Data
     $scope.data = {currentMessage: 0};
@@ -81,8 +83,6 @@ app.controller('MessagesController', ['$scope', '$timeout',
       document.title = $scope.currentMoment.format('dddd, MMMM Do YYYY') + ' | The J&K Messages';
     });
 
-    $scope.hasMessagesToday = false;
-
     $scope.showSeen = function(id) {
       return !!($scope.seen[id]);
     };
@@ -91,6 +91,14 @@ app.controller('MessagesController', ['$scope', '$timeout',
       if ($scope.showSeen(id)) {
         return '✓ Seen by ' + _.map($scope.seen[id], function(person) { return '<span title="' + moment.unix(person.time).format("dddd, MMMM Do YYYY, h:mm:ss a") + '">' + person.name + '</span>'; }).join(', ');
       }
+    };
+
+    $scope.showOnline = function() {
+      return $scope.onlineUsers.length > 0;
+    };
+
+    $scope.formattedOnline = function() {
+      return _.map($scope.onlineUsers, function(user) { return user.name; }).join(', ');
     };
 
     var db = new Firebase('https://jacob-and-kathryn.firebaseio.com/');
@@ -172,6 +180,7 @@ app.controller('MessagesController', ['$scope', '$timeout',
         usersDB.on('value', function(snap) {
           $scope.safeApply(function() {
             $scope.users = snap.val();
+            $scope.onlineUsers = _.filter($scope.users, function(user) { return user.online; });
 
             setUpAuth(user);
           });

@@ -14,6 +14,10 @@ div.container(id='main')
         h2.site-tagline(ng-switch-when="authorizing") Checking your credentials...
         h2.site-tagline(ng-switch-when="unauthorized") You are not authorized...
         h2.site-tagline(ng-switch-default) {{ currentMoment.format('dddd, MMMM Do YYYY') }}
+      div(ng-show="(state == 'authorized-updating' || state == 'authorized-current') && showOnline()")
+        p
+          strong Online:&nbsp;
+          | {{formattedOnline()}}
     div.unit.one-of-three
       div(ng-show="state == 'authorized-current' || state == 'authorized-updating'")
         a.btn(ng-href="/#/{{prevDay}}") Previous Day
