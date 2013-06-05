@@ -30,6 +30,7 @@ app.controller('MessagesController', ['$scope', '$timeout',
 
     // Authentication
     $scope.auth = {};
+    $scope.users = {};
 
     // Messages
     $scope.messages = [];
@@ -98,6 +99,7 @@ app.controller('MessagesController', ['$scope', '$timeout',
     var messagesDB = db.child('messages');
     var dataDB = db.child('data');
     var seenDB = db.child('seen');
+    var connectedDB = db.child('.info/connected');
 
     var loadMessages = function() {
       $scope.messages = [];
@@ -118,6 +120,46 @@ app.controller('MessagesController', ['$scope', '$timeout',
       }
     });
 
+    var trackPresence = function() {
+      var onlineRef = usersDB.child('fb-' + $scope.auth.id).child('online');
+      connectedDB.on('value', function(snap) {
+        if (snap.val() === true) {
+          // We're connected (or reconnected)!  Set up our presence state and tell
+          // the server to remove it when we leave.
+          onlineRef.onDisconnect().remove();
+          onlineRef.set(true);
+        }
+      });
+    };
+
+    var authSetUp = false;
+    var setUpAuth = function(user) {
+      if (authSetUp) return;
+      authSetUp = true;
+
+      if ($scope.users['fb-' + user.id]) {
+        $scope.auth = user;
+        $scope.state = 'authorized-updating';
+
+        seenDB.on('value', function(snap) {
+          $scope.safeApply(function() {
+            $scope.seen = snap.val();
+          });
+        });
+
+        dataDB.on('value', function(snap) {
+          $scope.safeApply(function() {
+            $scope.data = snap.val();
+          });
+          loadMessages();
+        });
+
+        trackPresence();
+      } else {
+        $scope.state = 'unauthorized';
+      }
+    };
+
     var authClient = new FirebaseAuthClient(db, function(error, user) {
       if (error) {
         console.log(error);
@@ -127,29 +169,12 @@ app.controller('MessagesController', ['$scope', '$timeout',
           $scope.state = 'authorizing';
         });
 
-        usersDB.child('fb-' + user.id).once('value', function(snap) {
-          if (snap.val() === true) {
-            $scope.safeApply(function() {
-              $scope.state = 'authorized-updating';
-            });
+        usersDB.on('value', function(snap) {
+          $scope.safeApply(function() {
+            $scope.users = snap.val();
 
-            seenDB.on('value', function(snap) {
-              $scope.safeApply(function() {
-                $scope.seen = snap.val();
-              });
-            });
-
-            dataDB.on('value', function(snap) {
-              $scope.safeApply(function() {
-                $scope.data = snap.val();
-              });
-              loadMessages();
-            });
-          } else {
-            $scope.safeApply(function() {
-              $scope.state = 'unauthorized';
-            });
-          }
+            setUpAuth(user);
+          });
         });
       } else {
         $scope.safeApply(function() {
