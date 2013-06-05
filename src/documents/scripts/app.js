@@ -134,7 +134,7 @@ app.controller('MessagesController', ['$scope', '$timeout',
         if (snap.val() === true) {
           // We're connected (or reconnected)!  Set up our presence state and tell
           // the server to remove it when we leave.
-          onlineRef.onDisconnect().remove();
+          onlineRef.onDisconnect().set(false);
           onlineRef.set(true);
         }
       });
