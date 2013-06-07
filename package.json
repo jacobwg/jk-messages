@@ -1,6 +1,6 @@
 {
   "name": "jk-messages",
-  "version": "2.3.3",
+  "version": "2.3.4",
   "private": true,
   "description": "Webapp for viewing Facebook messages between Jacob and Kathryn",
   "homepage": "https://github.com/jacobwg/jk-messages",
