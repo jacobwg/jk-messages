@@ -128,12 +128,11 @@ app.controller('MessagesController', ['$scope', '$timeout',
       }
     });
 
+    var onlineRef = null;
     var trackPresence = function() {
-      var onlineRef = usersDB.child('fb-' + $scope.auth.id).child('online');
+      onlineRef = usersDB.child('fb-' + $scope.auth.id).child('online');
       connectedDB.on('value', function(snap) {
-        if (snap.val() === true) {
-          // We're connected (or reconnected)!  Set up our presence state and tell
-          // the server to remove it when we leave.
+        if (snap.val() === true && onlineRef) {
           onlineRef.onDisconnect().set(false);
           onlineRef.set(true);
         }
