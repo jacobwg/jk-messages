@@ -1,6 +1,45 @@
+/* Basic Styles */
+
+html, body {
+  -webkit-font-smoothing: antialiased;
+  height: 100%;
+}
+
+body {
+  font-family: 'adelle','Helvetica Neue',Helvetica,Arial,sans-serif;
+  color: #222;
+  margin: 3rem 0;
+}
+
+a {
+  color: #90b4a8;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+small {
+  color: #bbb;
+  font-size: 75%;
+}
+
+
+/* Footer */
+
+footer {
+  position: relative;
+  bottom: 0px;
+  padding: 36px 0;
+}
+
+
+/* Full-width Images */
+
 .unit > img, .unit > a > img {
   width: 100%;
 }
+
+
+/* Messages */
 
 .jacob, .kathryn {
   padding: 36px 0;
@@ -10,14 +49,8 @@
   background-color: #FFF0F5;
 }
 
-footer {
-  padding: 36px 0;
-}
 
-small {
-  color: #bbb;
-  font-size: 75%;
-}
+/* Avatar Images */
 
 .avatar {
   display: block;
@@ -43,34 +76,35 @@ small {
 }
 
 
+/* Buttons */
 
-.wf-loading {
-  height:100%;overflow:hidden;background:url(/images/ajax-loader.gif) center center no-repeat fixed;
-}
-.wf-loading * {
-  opacity:0;
-}
-.wf-active body, .wf-inactive body{-webkit-animation:fade 1s ease;
+.btn {
+  display: block;
+  padding: 8px 15px;
+  padding: .375rem;
+  text-align: center;
+  color: #fff;
+  background-color: #90b4a8;
+  border-radius: .24rem;
+  font-size: .75rem;
+  text-shadow: 0 1px 1px rgba(0,0,0,.1);
+  border: 1px solid #000;
+  border: 1px solid rgba(0,0,0,.1);
+  line-height: 2;
+  margin-bottom: 15px;
+  width: 100%;
 }
 
-a{color:#90b4a8;font-weight:700;text-decoration:none;}
 
-html,body{-webkit-font-smoothing:antialiased;
-  height: 100%;
-}
-body {
-  font-family:'adelle','Helvetica Neue',Helvetica,Arial,sans-serif;
-  color:#222;
-  margin:3rem 0;
-}
+/* Site Title */
 
 .site-title {
-  margin-bottom:0;
-  letter-spacing:-.05px;
+  margin-bottom: 0;
+  letter-spacing: -.05px;
 }
-.site-title:first-letter {
-  margin-right:-.05em;
-}
+
+
+/* Mobile Utilities */
 
 @media screen and (max-width: 650px) {
   .hide-mobile {
@@ -78,45 +112,20 @@ body {
   }
 }
 
-footer {
-  position: relative;
-  bottom: 0px;
+
+/* Webfont Loading */
+
+.wf-loading {
+  height: 100%;
+  overflow: hidden;
+  background: url(/images/ajax-loader.gif) center center no-repeat fixed;
 }
 
-#main {
-  min-height: 100%;
+.wf-loading * {
+  opacity: 0;
 }
 
-
-.btn{
-  display:block;
-  padding:8px 15px;
-  padding:.375rem;
-  text-align:center;
-  color:#fff;
-  background-color:#90b4a8;
-  border-radius:.24rem;
-  font-size:.75rem;
-  text-shadow:0 1px 1px rgba(0,0,0,.1);
-  border: 1px solid #000;
-  border: 1px solid rgba(0,0,0,.1);
-  line-height:2;
-  margin-bottom: 15px;
-  width: 100%;
-}
-
-
-.demo .unit{padding:15px;padding:.75rem;margin-bottom:30px;margin-bottom:1.5rem;text-align:center;background-color:#f7f5f2;color:#b5b75e;}@media screen and (max-width: 650px) {.demo{display:none;}}@-webkit-keyframes fade {
-    0% { display: none; opacity: 0; } 1% { display: block; }
-    100%{ opacity: 1; }
-}
-
-@-webkit-keyframes fadeInDown {
-    from { -webkit-transform: translateY(-10px); opacity: 0; }
-    to { -webkit-transform: none; opacity: 1; }
-}
-
-@-webkit-keyframes fadeInUp {
-    from { -webkit-transform: translateY(10px); opacity: 0; }
-    to { -webkit-transform: none; opacity: 1; }
+.wf-active body, .wf-inactive body {
+  -webkit-animation: fade 1s ease;
+     -moz-animation: fade 1s ease;
 }
