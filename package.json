@@ -31,13 +31,13 @@
     "docpad-plugin-partials": "2.x",
     "docpad-plugin-stylus": "2.x",
     "docpad-plugin-text": "2.x",
-    "docpad-plugin-jade": "~2.3.1",
-    "when": "~2.1.0",
+    "docpad-plugin-jade": "2.x",
+    "when": "2.x",
     "fb": "~0.6.2",
     "nconf": "~0.6.7",
     "firebase": "~0.5.2",
-    "docpad-plugin-ghpages": "~2.0.2",
-    "moment": "~2.0.0"
+    "docpad-plugin-ghpages": "2.x",
+    "moment": "2.x"
   },
   "devDependencies": {
     "docpad-plugin-livereload": "~2.4.0"
