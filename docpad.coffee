@@ -19,6 +19,7 @@ docpadConfig = {
 			scripts: [
 				'https://cdn.firebase.com/v0/firebase.js'
 				'https://cdn.firebase.com/v0/firebase-simple-login.js'
+				'https://www.firebase.com/js/libs/idle.js'
 				'/vendor/vendor.js'
 				'/scripts/app.js'
 			]
