@@ -167,7 +167,7 @@ app.controller('MessagesController', ['$scope', '$timeout',
       }
     };
 
-    var authClient = new FirebaseAuthClient(db, function(error, user) {
+    var authClient = new FirebaseSimpleLogin(db, function(error, user) {
       if (error) {
         console.log(error);
       } else if (user) {
