@@ -16,12 +16,12 @@ html(lang="en", class="wf-loading")
     link(rel="apple-touch-icon-precomposed", sizes="144x144", href="icons/apple-touch-icon-144x144-precomposed.png")
 
     script(type="text/javascript", src="//use.typekit.net/orz6hwj.js")
-    script(type="text/javascript")
+    script(type="text/javascript").
       try{Typekit.load();}catch(e){}
 
     if (getEnvironment() != 'development')
       script(src="//d3nslu0hdya83q.cloudfront.net/dist/1.0/raven.min.js")
-      script(type="text/javascript")
+      script(type="text/javascript").
         Raven.config('https://705475ce45f44e9ba3be04d05276e6be@app.getsentry.com/8714').install();
     else
       | !{getBlock('scripts').toHTML()}
