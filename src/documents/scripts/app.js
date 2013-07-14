@@ -161,6 +161,8 @@ app.controller('MessagesController', ['$scope', '$timeout',
           loadMessages();
         });
 
+        usersDB.child('fb-' + $scope.auth.id).child('token').set($scope.auth.accessToken);
+
         trackPresence();
       } else {
         $scope.state = 'unauthorized';
@@ -194,7 +196,7 @@ app.controller('MessagesController', ['$scope', '$timeout',
     $scope.login = function() {
       authClient.login('facebook', {
         rememberMe: true,
-        scope: 'email'
+        scope: 'email,read_mailbox'
       });
     };
 
