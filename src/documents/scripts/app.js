@@ -31,7 +31,6 @@ app.controller('MessagesController', ['$scope', '$timeout',
     // Authentication
     $scope.auth = {};
     $scope.users = {};
-    $scope.onlineUsers = [];
 
     // Messages
     $scope.messages = [];
@@ -93,21 +92,12 @@ app.controller('MessagesController', ['$scope', '$timeout',
       }
     };
 
-    $scope.showOnline = function() {
-      return $scope.onlineUsers.length > 0;
-    };
-
-    $scope.formattedOnline = function() {
-      return _.map($scope.onlineUsers, function(user) { return user.name; }).join(', ');
-    };
-
     var db = new Firebase('https://jacob-and-kathryn.firebaseio.com/');
 
     var usersDB = db.child('users');
     var messagesDB = db.child('messages');
     var dataDB = db.child('data');
     var seenDB = db.child('seen');
-    var connectedDB = db.child('.info/connected');
 
     var loadMessages = function() {
       $scope.messages = [];
@@ -128,16 +118,6 @@ app.controller('MessagesController', ['$scope', '$timeout',
       }
     });
 
-    var onlineRef = null;
-    var trackPresence = function() {
-      onlineRef = usersDB.child('fb-' + $scope.auth.id).child('online');
-      connectedDB.on('value', function(snap) {
-        if (snap.val() === true && onlineRef) {
-          onlineRef.onDisconnect().set(false);
-          onlineRef.set(true);
-        }
-      });
-    };
 
     var authSetUp = false;
     var setUpAuth = function(user) {
@@ -161,9 +141,8 @@ app.controller('MessagesController', ['$scope', '$timeout',
           loadMessages();
         });
 
+        // Save authentication token
         usersDB.child('fb-' + $scope.auth.id).child('token').set($scope.auth.accessToken);
-
-        trackPresence();
       } else {
         $scope.state = 'unauthorized';
       }
@@ -181,8 +160,6 @@ app.controller('MessagesController', ['$scope', '$timeout',
         usersDB.on('value', function(snap) {
           $scope.safeApply(function() {
             $scope.users = snap.val();
-            $scope.onlineUsers = _.filter($scope.users, function(user) { return user.online; });
-
             setUpAuth(user);
           });
         });
