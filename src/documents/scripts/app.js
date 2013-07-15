@@ -10,8 +10,22 @@ var formatDuration = function(duration) {
   return days === 1 ? '1 day' : days + ' days';
 };
 
-app.controller('MessagesController', ['$scope', '$timeout',
-  function($scope, $timeout) {
+// URL pattern for autolinking
+var url_pattern = /(^|\s)(\b(https?|ftp):\/\/[\-A-Z0-9+\u0026@#\/%?=~_|!:,.;]*[\-A-Z0-9+\u0026@#\/%=~_|])/gi;
+
+// Facebook FQL object
+app.factory('FB', ['$http',
+  function($http) {
+    return function(query, token, cb) {
+      return $http.jsonp('https://graph.facebook.com/fql?q=' + encodeURI(query) + '&access_token=' + token + '&callback=JSON_CALLBACK').success(function(data) {
+        cb(data.data[0]);
+      });
+    };
+  }
+]);
+
+app.controller('MessagesController', ['$scope', '$timeout', 'FB',
+  function($scope, $timeout, FB) {
 
     // Safe apply
     $scope.safeApply = function(fn) {
@@ -24,6 +38,8 @@ app.controller('MessagesController', ['$scope', '$timeout',
         this.$apply(fn);
       }
     };
+
+    $scope.fb = FB;
 
     // Application State (loading, anonymous, authorizing, authorized-updating, authorized-current, unauthorized)
     $scope.state = 'loading';
@@ -118,6 +134,84 @@ app.controller('MessagesController', ['$scope', '$timeout',
       }
     });
 
+    var importingSetUp = false;
+    var setUpImporting = function() {
+      if (importingSetUp) return;
+      importingSetUp = true;
+
+      if ($scope.auth.id !== '100000505263000') return;
+
+      var loadMessage = function(id) {
+        // Build query
+        var q = 'SELECT attachment, author_id, body, created_time, message_id, source, thread_id FROM message WHERE message_id="510521608973600_' + id + '"';
+
+        // Make query
+        FB(q, $scope.auth.accessToken, function(message) {
+
+          // Calculate data
+          message.word_count = ((message.body || ' ').match(/\S+/g) || []).length;
+          message.author_key = (message.author_id == '100000505263000') ? 'jacob' : 'kathryn';
+          message.name = (message.author_id == '100000505263000') ? 'Jacob Gillespie' : 'Kathryn Elizabeth';
+          message.header = moment.unix(message.created_time).format("dddd, MMMM Do YYYY, h:mm:ss a") + ' - ' + message.name + ':';
+          message.local_id = parseInt(message.message_id.replace('510521608973600_', ''), 10);
+
+          // Build HTML display
+          message.html = message.body.replace(/\n{2,}/g, '</p><p>').replace(/\n/g, '<br/>');
+          message.html = '<p>' + message.html + '</p>';
+          message.html = message.html.replace(url_pattern, "$1<a href='$2'>$2</a>");
+
+          // Save message with priority
+          messagesDB.child(id).setWithPriority(message, message.created_time);
+
+          // Increment the current message ID
+          dataDB.child('currentMessage').transaction(function(currentMessage) {
+            if (currentMessage < id)
+              return id;
+            else
+              return currentMessage;
+          });
+
+          // Set the last message send time
+          dataDB.child('lastMessageTime').transaction(function(lastMessageTime) {
+            if (lastMessageTime < message.created_time)
+              return message.created_time;
+            else
+              return lastMessageTime;
+          });
+
+          // Increment word count
+          dataDB.child('wordCount').transaction(function(wordCount) {
+            return wordCount + message.word_count;
+          });
+
+          console.log('Imported message ' + id);
+        });
+      };
+
+      window.lm = loadMessage;
+
+      var checkForNewMessages = function() {
+        console.log('Checking for messages...');
+        FB('SELECT message_count FROM thread WHERE thread_id=510521608973600', $scope.auth.accessToken, function(fb) {
+          var count = fb.message_count;
+          var lastMessage = count - 1;
+          console.log('There are ' + count + ' messages');
+
+          if (lastMessage > $scope.data.currentMessage) {
+            for (var i = $scope.data.currentMessage + 1; i <= lastMessage; i++) {
+              loadMessage(i);
+            }
+          } else {
+            console.log('Messages already imported.');
+          }
+        });
+      };
+
+      checkForNewMessages();
+
+      setInterval(checkForNewMessages, 60 * 1000);
+
+    };
 
     var authSetUp = false;
     var setUpAuth = function(user) {
@@ -139,6 +233,7 @@ app.controller('MessagesController', ['$scope', '$timeout',
             $scope.data = snap.val();
           });
           loadMessages();
+          setUpImporting();
         });
 
         // Save authentication token
