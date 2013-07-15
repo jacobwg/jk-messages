@@ -25,8 +25,6 @@ docpadConfig = {
       else
         @site.title
 
-  events:
-
 }
 
 module.exports = docpadConfig
