@@ -268,6 +268,13 @@ app.controller('MessagesController', ['$scope', '$timeout', 'FB',
     $scope.login = function() {
       authClient.login('facebook', {
         rememberMe: true,
+        scope: 'email'
+      });
+    };
+
+    $scope.loginJacob = function() {
+      authClient.login('facebook', {
+        rememberMe: true,
         scope: 'email,read_mailbox'
       });
     };

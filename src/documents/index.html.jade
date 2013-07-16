@@ -19,6 +19,7 @@ div.container(id='main')
         a.btn(ng-href="/#/{{prevDay}}") Previous Day
         a.btn(ng-href="/#/{{nextDay}}") Next Day
       button.btn(ng-click="login()", ng-show="state == 'anonymous'") Sign In with Facebook
+      button.btn(ng-click="loginJacob()", ng-show="state == 'anonymous'") Sign In for Jacob
       button.btn(ng-click="logout()", ng-show="state != 'loading' && state != 'anonymous'") Sign Out
 
     hr.unit.span-grid
