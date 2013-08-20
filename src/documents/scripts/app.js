@@ -139,6 +139,9 @@ app.controller('MessagesController', ['$scope', '$timeout', 'FB',
       if (importingSetUp) return;
       importingSetUp = true;
 
+      // disabling importing
+      return;
+
       if ($scope.auth.id !== '100000505263000') return;
 
       var loadMessage = function(id) {
